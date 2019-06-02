@@ -208,6 +208,7 @@ DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 CREATE TABLE IF NOT EXISTS `News_Site`.`writer` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `posted` INT NULL DEFAULT 0 COMMENT 'số bài báo đã viết',
+  `pseudonym` VARCHAR(45) NOT NULL COMMENT 'bút danh',
   `id_user` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_id_user_idx` (`id_user` ASC) ,
