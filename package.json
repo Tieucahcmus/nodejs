@@ -1,0 +1,28 @@
+{
+    "name": "nodejs",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Tieucahcmus/nodejs.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Tieucahcmus/nodejs/issues"
+    },
+    "homepage": "https://github.com/Tieucahcmus/nodejs#readme",
+    "dependencies": {
+        "express": "^4.17.1",
+        "express-handlebars": "^3.1.0",
+        "md5.js": "^1.3.5",
+        "morgan": "^1.9.1",
+        "mysql": "^2.17.1"
+    }
+}
