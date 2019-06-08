@@ -1,12 +1,22 @@
 var db = require("../utils/db");
 
-var __Table__ = "category";
+var __TB_Category__ = "category";
 var __IDField__ = "id";
 var __where_Field__ = "username";
+var __TB_SubCategory__ = "subcategory";
 
 module.exports = {
   all: () => {
-    return db.load(`select * from  ${__Table__}`);
+    return db.load(`select * from  ${__TB_Category__}`);
+  },
+
+  allSubCategory1: () => {
+    return db.load(`select * from  ${__TB_SubCategory__}`);
+  },
+
+  allSubCategory_Dependent_Cat: () => {
+    return db.load(`select cat.name as CatName, sub.*
+    from ${__TB_Category__} cat left join  ${__TB_SubCategory__} sub on cat.id = sub.id_category`);
   },
 
   allWithDetails: () => {
@@ -18,14 +28,28 @@ module.exports = {
   },
 
   single: id => {
-    return db.load(`select * from ${__Table__} where ${__IDField__} = ${id}`);
+    return db.load(
+      `select * from ${__TB_Category__} where ${__IDField__} = ${id}`
+    );
   },
 
+  singleBy: (Table, Field, Key) => {
+    return db.load(
+      `select * from ${Table} where ${Field} = '${Key}'`
+    );
+  },
   /**
    * @param {*} entity { CatName: ... }
    */
   add: entity => {
-    return db.add("categories", entity);
+    return db.add(__TB_Category__, entity);
+  },
+
+  add_Table: entity => {
+    var table = entity.table;
+    delete entity.table;
+    console.log(entity);
+    return db.add(table, entity);
   },
 
   /**
@@ -34,10 +58,10 @@ module.exports = {
   update: entity => {
     var id = entity.CatID;
     delete entity.CatID;
-    return db.update("categories", "CatID", entity, id);
+    return db.update(__TB_Category__, "CatID", entity, id);
   },
 
   delete: id => {
-    return db.delete("categories", "CatID", id);
+    return db.delete(__TB_Category__, "CatID", id);
   }
 };

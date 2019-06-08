@@ -27,13 +27,13 @@ USE `News_Site` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `News_Site`.`category` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name_utf8` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL COMMENT 'tên Tiếng Việt có dấu',
-  `name_asni` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL COMMENT 'tên không dấu',
-  `sequence` INT NULL COMMENT 'thứ tự bài viết',
+  `name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL COMMENT 'tên Tiếng Việt có dấu',
+  `slug_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL COMMENT 'tên không dấu',
+  -- `sequence` INT NULL COMMENT 'thứ tự bài viết',
   `is_delete` TINYINT(1) NULL DEFAULT 0 COMMENT '1: true - đã xoá, 0: false - chưa xoá',
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `sequence_UNIQUE` (`sequence` ASC) ,
-  FULLTEXT INDEX `fts_category` (`name_utf8`, `name_asni`) )
+  -- UNIQUE INDEX `sequence_UNIQUE` (`sequence` ASC) ,
+  FULLTEXT INDEX `fts_category` (`name`, `slug_name`) )
 ENGINE = InnoDB 
 DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
@@ -42,16 +42,16 @@ DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `News_Site`.`subcategory` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name_utf8` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL COMMENT 'tên Tiếng Việt có dấu',
-  `name_asni` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL COMMENT 'tên không dấu',
-  `sequence` INT NULL COMMENT 'thứ tự bài viết',
+  `name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL COMMENT 'tên Tiếng Việt có dấu',
+  `slug_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL COMMENT 'tên không dấu',
+  -- `sequence` INT NULL COMMENT 'thứ tự bài viết',
   `id_category` INT NOT NULL,
   `is_delete` TINYINT(1) NULL DEFAULT 0 COMMENT '1: true - đã xoá, 0: false - chưa xoá',
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name_utf8` ASC) ,
-  UNIQUE INDEX `name_asni_UNIQUE` (`name_asni` ASC) ,
-  UNIQUE INDEX `sequence_UNIQUE` (`sequence` ASC) ,
-  FULLTEXT INDEX `fts_subcategory` (`name_utf8`, `name_asni`) ,
+  -- UNIQUE INDEX `name_UNIQUE` (`name` ASC) ,
+  -- UNIQUE INDEX `slug_name_UNIQUE` (`slug_name` ASC) ,
+  -- UNIQUE INDEX `sequence_UNIQUE` (`sequence` ASC) ,
+  FULLTEXT INDEX `fts_subcategory` (`name`, `slug_name`) ,
   INDEX `fk_subcategory_id_category_idx` (`id_category` ASC) ,
   CONSTRAINT `fk_subcategory_id_category`
     FOREIGN KEY (`id_category`)
@@ -69,8 +69,9 @@ CREATE TABLE IF NOT EXISTS `News_Site`.`user_permission` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '1: admin\n2: editor\n3: writer\n4: subcriber',
   `key` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL COMMENT '1: admin\n2: editor\n3: writer\n4: subcriber',
   `id_delete` TINYINT(1) NULL DEFAULT 0 COMMENT '1: true - đã xoá, 0: false - chưa xoá',
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `typename_UNIQUE` (`key` ASC) )
+  PRIMARY KEY (`id`)
+  -- UNIQUE INDEX `typename_UNIQUE` (`key` ASC) )
+)  
 ENGINE = InnoDB 
 DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
@@ -88,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `News_Site`.`users` (
   `date_of_birth` DATE NULL,
   `is_delete` TINYINT(1) NULL DEFAULT 0 COMMENT '1: true - đã xoá, 0: false - chưa xoá',
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `username_UNIQUE` (`username` ASC) ,
+  -- UNIQUE INDEX `username_UNIQUE` (`username` ASC) ,
   -- UNIQUE INDEX `password_UNIQUE` (`password` ASC) ,
   -- UNIQUE INDEX `displayname_UNIQUE` (`displayname` ASC) ,
   INDEX `fk_id_persmission_idx` (`id_permission` ASC) ,
@@ -106,11 +107,12 @@ DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `News_Site`.`post` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `title_utf8` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL COMMENT 'là tiêu đề Tiếng Việt có dấu',
-  `title_ansi` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL COMMENT 'là tiêu đề không dấu',
+  `title` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL COMMENT 'là tiêu đề Tiếng Việt có dấu',
+  `slug_title` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL COMMENT 'là tiêu đề không dấu',
   `post_date` DATETIME NOT NULL,
   `last_update` DATETIME NULL,
   `id_user` INT NOT NULL,
+  `pseudonym` VARCHAR(45) NOT NULL COMMENT 'bút danh',
   `views` INT NULL,
   `id_category` INT NOT NULL,
   `id_subcategory` INT NULL,
@@ -125,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `News_Site`.`post` (
   INDEX `fk_id_category_idx` (`id_category` ASC) ,
   INDEX `fk_id_subcategory_idx` (`id_subcategory` ASC) ,
   INDEX `fk_id_user_idx` (`id_user` ASC) ,
-  FULLTEXT INDEX `fts_post` (`title_utf8`, `summary`, `content`, `title_ansi`, `tag`) ,
+  FULLTEXT INDEX `fts_post` (`title`, `summary`, `content`, `slug_title`, `tag`) ,
   CONSTRAINT `fk_post_id_category`
     FOREIGN KEY (`id_category`)
     REFERENCES `News_Site`.`category` (`id`)

@@ -4,6 +4,10 @@ var hbs_sections = require("express-handlebars-sections");
 var morgan = require("morgan");
 var createError = require("http-errors");
 var numeral = require("numeral");
+var hbs_helpers = require("handlebars-helpers")();
+
+var categoryModel = require("./models/categories.model");
+var utils = require("./utils/utils");
 
 var app = express();
 
@@ -16,12 +20,14 @@ app.engine(
   exphbs({
     extname: ".hbs",
     layoutsDir: "views/layouts",
-    defaultLayout: "mainpost",
+    defaultLayout: "mainpost_layout",
     helpers: {
       format_number: val => {
         return numeral(val).format("0,0");
       },
-      section: hbs_sections()
+
+      section: hbs_sections(),
+      hbs_helpers: hbs_helpers
     }
   })
 );
@@ -39,37 +45,56 @@ app.use(express.static("public"));
 // app.use(express.static("views"));
 
 // ==================== MIDDLEWARES ====================
-require("./middlewares/session")(app);
-require("./middlewares/passport")(app);
-// require("./middlewares/upload")(app);
+require("./middlewares/session.mdw")(app);
+require("./middlewares/passport.mdw")(app);
 
+// require("./middlewares/upload")(app);
 app.use(require("./middlewares/auth.mdw"));
 
 // ==================== ROUTES ====================
-app.get("/", (req, res) =>
+app.get("/", (req, res, next) => {
   // res.end('Hello World!')
-  res.render("view_posts/home")
-);
-
-app.use("/posts", require("./routes/posts.router"));
+  categoryModel
+    .all()
+    .then(rows => {
+      // console.log(rows);
+      categoryModel
+        .allSubCategory1()
+        .then(subs => {
+          // console.log(subs);
+          // console.log(res.locals.categories);
+          res.render("view_posts/home", {
+            post_categories: rows,
+            post_subcategories: subs
+          });
+        })
+        .catch(next);
+    })
+    .catch(next);
+  // res.render("view_posts/home");
+});
 
 app.use("/managers", require("./routes/managers.router"));
 
 app.use("/users", require("./routes/users.router"));
 
-app.get("/contact", (req, res) => {
-  res.render("contact");
+app.use("/writers", require("./routes/writers.router"));
+
+app.use("/posts", require("./routes/posts.router"));
+
+app.get("/contact", (req, res, next) => {
+  res.render("view_posts/contact");
 });
 
-app.get("/about", (req, res) => {
-  res.render("about");
+app.get("/about", (req, res, next) => {
+  res.render("view_posts/about");
 });
 
-app.get("/404", (req, res) => {
+app.get("/404", (req, res, next) => {
   res.render("404", {layout: false});
 });
 
-app.get("/error", (req, res) => {
+app.get("/error", (req, res, next) => {
   res.render("error", {layout: false});
 });
 

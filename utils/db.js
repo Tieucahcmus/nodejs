@@ -85,7 +85,7 @@ module.exports = {
     });
   },
 
-  // load: (sql, fn) => {
+  // seq_load: (sql, fn) => {
   //   var connection = createConnection();
   //   connection.connect();
   //   connection.query(sql, (error, results, fields) => {

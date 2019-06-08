@@ -3,7 +3,8 @@ var bcrypt = require("bcrypt");
 var moment = require("moment");
 var passport = require("passport");
 var userModel = require("../models/user.model");
-var restricted = require("../middlewares/restricted");
+
+var restricted = require("../middlewares/restricted.mdw");
 
 var router = express.Router();
 
@@ -24,7 +25,7 @@ router.post("/register", (req, res, next) => {
   var entity = req.body;
   entity.password = hash;
   entity.date_of_birth = dob;
-  // // entity.id_permission = 0;
+  // entity.id_permission = 0;
   // console.log(entity);
   delete entity.t_password;
   delete entity.confirm;
@@ -87,7 +88,7 @@ router.post("/login", (req, res, next) => {
     if (err) return next(err);
 
     if (!user) {
-      return res.render("view_users/login/", {
+      return res.render("view_users/login", {
         layout: false,
         err_message: info.message
       });

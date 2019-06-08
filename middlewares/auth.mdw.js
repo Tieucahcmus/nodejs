@@ -3,8 +3,8 @@ module.exports = (req, res, next) => {
     res.locals.isAuthenticated = true;
     res.locals.authUser = req.user;
     console.log("auth.mdx");
-    console.log(res.locals.authUser);
-    console.log(res.locals.authUser.id_permission);
+    // console.log(res.locals.authUser);
+    // console.log(res.locals.authUser.id_permission);
     if (+res.locals.authUser.id_permission === 1) {
       console.log("admin");
       res.locals.is_admin = true;
