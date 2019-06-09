@@ -1,29 +1,13 @@
 {{#section 'css'}}
-{{!-- CDN --}}
-{{!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.3/css/fileinput.min.css" media="all"
-  rel="stylesheet" type="text/css" /> --}}
 
 <link href="/css/fileinput.min.css" rel="stylesheet" type="text/css">
 
 {{/section}}
 
 {{#section 'js'}}
-
-{{!-- CDN --}}
-{{!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> --}}
-{{!-- <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=ezd73nxbzc7bu6e86g2l82jbbffke0mwevwrnyvc5q8h89j6">
-</script> --}}
-{{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.3/themes/fa/theme.min.js"></script> --}}
-{{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.3/js/fileinput.min.js"></script> --}}
-
-
 <script src="/plugins/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/plugins/tinymce/js/tinymce/themes/silver/theme.min.js"></script>
-
-
-{{!-- <script src="/js/wysiwyg/tinymce.min_m.js"></script> --}}
 <script src="/js/wysiwyg/fileinput.min.js"></script>
-{{!-- <script src="/js/wysiwyg/themes/silver/theme.min.js"></script> --}}
 
 <script>
     $(function () {
@@ -38,7 +22,7 @@
         });
 
         tinymce.init({
-            selector: '#txtFullDes',
+            selector: "#txtFullDes",
             menubar: false,
             height: 600,
             plugins: 'paste image link autolink lists table media',
@@ -50,9 +34,15 @@
             ],
             image_caption: true,
             entity_encoding: "raw",
+            setup: function (editor) {
+                        editor.on('change', function () {
+                            editor.save();
+                        });
+                    }
         });
     })
 </script>
+<script src="/mfunctions/functions.js"></script>
 {{/section}}
 
 <form action="" method="POST">
@@ -62,24 +52,36 @@
         </h5>
         <div class="card-body">
             <div class="form-group">
-                <label for="fuMain">Photo:</label>
-                <div class="file-loading">
-                    <input id="fuMain" name="fuMain" type="file" multiple>
+                <label for="title">Title</label>
+                <div class="">
+                    <input id="title" name="title" class="form-control" onkeyup="ChangeToSlug();" type="text">
                 </div>
             </div>
-
             <div class="form-group">
-                <label for="title">Title:</label>
+                <label for="title">Slug</label>
                 <div class="">
-                    <input id="title" name="title" class="form-control" type="text">
+                    <input id="slug" name="slug" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select name="category" class="form-control">
+                    <option value="">--</option>
+                    {{#each this.category}}
+                    <option value="{{id}}">{{name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="summary">Summary</label>
+                <div class="">
+                    <textarea id="summary" name="summary" class="form-control" type="text"></textarea>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="txtFullDes">Content</label>
-                <texNtarea class="tinymce form-control" id="txtFullDes" name="FullDes">
-
-                </texNtarea>
+                <textarea class="form-control" id="txtFullDes" name="FullDes"></textarea>
             </div>
         </div>
         <div class="card-footer text-right">

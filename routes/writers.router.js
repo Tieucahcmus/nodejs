@@ -1,22 +1,13 @@
 var express = require("express");
 var userModel = require("../models/user.model");
-
+var categoryModel = require("../models/categories.model");
 var config = require("../config/default.json");
 
 var router = express.Router();
 
 router.get("/", (req, res) => {
-  console.log("writers");
-  console.log(res.body);
-  console.log(res.locals);
-
-  // res.render("view_writers/index", {
-    //   //   layout: "writer"
-    //   // });
-
   //phải đăng nhập và là writer thì mới được vào trang writer
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    // res.end("sb admin");
+  if (/*res.locals.isAuthenticated && res.locals.is_writer*/ true) {
     res.render("view_writers/index", {
       layout: "writer_layout"
     });
@@ -55,35 +46,44 @@ router.get("/charts", (req, res) => {
 
 router.get("/writing", (req, res) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-    // res.end("view_writers/writing");
-    res.render("view_writers/writing", {
-      layout: "writer_layout"
-    });
+    categoryModel
+    .all()
+    .then(rows => {
+      res.render("view_writers/writing", {
+        layout: "writer_layout",
+        category:rows
+      });
+    })
   } else {
     res.render("404", {
       layout: false
     });
   }
-
-  // res.render("categories-post");
 });
 
 
 router.post("/writing", (req, res, next) => {
 
-  res.end(req.body); 
-  console.log(res.local);
+  const entity ={
+    title : req.body.title,
+    slug: req.body.slug,
+    summary :req.body.summary,
+    category :req.body.category,
+    content :req.body.FullDes
+  };
+  console.log(entity);
 
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    // res.end("view_writers/writing");
-    res.render("view_writers/writing", {
-      layout: "writer_layout"
-    });
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
+
+  // if (res.locals.isAuthenticated && res.locals.is_writer) {
+  //   // res.end("view_writers/writing");
+  //   res.render("view_writers/writing", {
+  //     layout: "writer_layout"
+  //   });
+  // } else {
+  //   res.render("404", {
+  //     layout: false
+  //   });
+  // }
 
   // res.render("categories-post");
 });

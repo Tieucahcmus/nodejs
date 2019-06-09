@@ -57,7 +57,6 @@ app.use(require("./middlewares/auth.mdw"));
 
 // ==================== ROUTES ====================
 app.get("/", (req, res, next) => {
-  // res.end('Hello World!')
   categoryModel
     .all()
     .then(rows => {

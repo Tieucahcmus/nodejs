@@ -174,17 +174,12 @@
                                     {{#each post_categories}}
                                     <li><a href="/posts/{{slug_name}}">{{name}}</a>
                                         <ul class="dropdown" style="width: 260px">
-
                                             {{#each ../post_subcategories}}
-
                                             {{#eq ../id  id_category}}
-
                                                 <li> <a href="/posts/{{../slug_name}}/{{slug_name}}"> {{name}}</a></li>
-
                                             {{/eq}}
                                             {{!-- <li><a href="/">{{../id}} {{id_category}}</a></li> --}}
                                             {{/each}}
-
                                             {{!-- <li><a href="#">Dropdown</a>
                                                 <ul class="dropdown">
                                                     <li><a href="/">Home</a></li>
