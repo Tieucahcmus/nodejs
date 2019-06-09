@@ -18,8 +18,8 @@ INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Esports', 'es
 INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Game Online','game-online');
 INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Manga/Film','manga-film');
 INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('PC/Conslole','pc-conslole');
-INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Khám Phá','Khám Phá');
-INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Mobile','mobile');
+-- INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Khám Phá','Khám Phá');
+-- INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Mobile','mobile');
 
 
 -- subcategory

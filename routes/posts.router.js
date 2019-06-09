@@ -65,9 +65,14 @@ router.get("/category/:id", (req, res, next) => {
   });
 });
 
-// tên không dấu
-// router.get("/:title_asni", (req, res) => {
-//   res.render("single-post");
-// });
+//category tên không dấu
+router.get("/:slug_name", (req, res, next) => {
+  console.log("posts/category");
+  var slug_name = req.params.slug_name;
+  console.log(slug_name);
+  res.render("view_posts/categories-post.hbs", {
+    slug_name: slug_name
+  });
+});
 
 module.exports = router;

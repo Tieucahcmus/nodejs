@@ -50,6 +50,10 @@ require("./middlewares/passport.mdw")(app);
 
 // require("./middlewares/upload")(app);
 app.use(require("./middlewares/auth.mdw"));
+// app.use(require("./middlewares/post.mdw"));
+
+
+
 
 // ==================== ROUTES ====================
 app.get("/", (req, res, next) => {
