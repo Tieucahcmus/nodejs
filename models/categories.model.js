@@ -38,6 +38,11 @@ module.exports = {
       `select * from ${Table} where ${Field} = '${Key}'`
     );
   },
+  singleByIs: (Table, Field, Key,is_delete) => {
+    return db.load(
+      `select * from ${Table} where ${Field} = '${Key}' and is_delete = '${is_delete}'`
+    );
+  },
   /**
    * @param {*} entity { CatName: ... }
    */
@@ -56,13 +61,13 @@ module.exports = {
    * @param {*} entity { CatID, CatName }
    */
   update: entity => {
-    var id = entity.CatID;
-    delete entity.CatID;
-    return db.update(__TB_Category__, "CatID", entity, id);
+    var id = entity.id;
+    delete entity.id;
+    return db.update(__TB_Category__, "id", entity, id);
   },
 
   delete: id => {
-    return db.delete(__TB_Category__, "CatID", id);
+    return db.delete(__TB_Category__, "id", id);
   },
   
   remove_category : id =>{

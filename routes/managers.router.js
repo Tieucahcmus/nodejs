@@ -85,6 +85,50 @@ router.get("/categories/delete/:id", (req, res, next) => {
 });
 
 
+router.get("/categories/edit/:id", (req, res, next) => {  
+  var CatID=req.params.id;
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    categoryModel
+      .singleBy('category','id',CatID)
+      .then(rows => {
+        console.log(rows);
+        res.render("view_managers/vm_categories/edit_category", {
+          layout: "sbadmin_layout",
+          category: rows[0],
+          id: CatID
+        });
+      })
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+
+router.post("/categories/edit/:id", (req, res, next) => {  
+  var entity = {
+    id : req.body.id,
+    name: req.body.cat_name,
+    slug_name: req.body.slug_name,
+    is_delete : +req.body.is_delete
+  };
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    categoryModel
+      .update(entity)
+      .then(
+        res.redirect('/managers/categories')
+        )
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+
 router.get("/category/add", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {
     res.render("view_managers/vm_categories/m_category_add", {
@@ -133,7 +177,7 @@ router.get("/category/name-is-available", (req, res, next) => {
   var name = req.query.exist_name;
   console.log("category/name-is-available");
   console.log(name);
-  categoryModel.singleBy("category", "name", name).then(rows => {
+  categoryModel.singleByIs("category", "name", name,0).then(rows => {
     if (rows.length > 0) {
       console.log("false");
       res.json(false);
@@ -148,7 +192,7 @@ router.get("/category/slug_name-is-available", (req, res, next) => {
   var slug_name = req.query.exist_slug_name;
   console.log("category/slug_name-is-available");
   console.log(slug_name);
-  categoryModel.singleBy("category", "slug_name", slug_name).then(rows => {
+  categoryModel.singleByIs("category", "slug_name", slug_name,0).then(rows => {
     if (rows.length > 0) {
       console.log("false");
       res.json(false);
