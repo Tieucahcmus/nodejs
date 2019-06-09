@@ -1,8 +1,8 @@
 var express = require("express");
 var userModel = require("../models/user.model");
+var postModel = require("../models/post.model");
 var categoryModel = require("../models/categories.model");
 var config = require("../config/default.json");
-
 var router = express.Router();
 
 router.get("/", (req, res) => {
@@ -63,17 +63,32 @@ router.get("/writing", (req, res) => {
 
 
 router.post("/writing", (req, res, next) => {
-
+  var user_id=req.body.writer_id;
   const entity ={
     title : req.body.title,
-    slug: req.body.slug,
+    slug_title: req.body.slug,
     summary :req.body.summary,
-    category :req.body.category,
-    content :req.body.FullDes
+    id_category :req.body.category,
+    content :req.body.FullDes,
+    id_user: user_id,
+    pseudonym: 'đéo biết lấy bút danh'
   };
-  console.log(entity);
-
-
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
+       postModel
+      .addPost(entity)
+      .then(id => {
+        res.render("view_writers/writing", {
+          layout: "writer_layout"
+        });
+      })
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+ 
   // if (res.locals.isAuthenticated && res.locals.is_writer) {
   //   // res.end("view_writers/writing");
   //   res.render("view_writers/writing", {
@@ -86,7 +101,6 @@ router.post("/writing", (req, res, next) => {
   // }
 
   // res.render("categories-post");
-});
 
 router.get("/subcategories1", (req, res) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {

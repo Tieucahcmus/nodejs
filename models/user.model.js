@@ -19,6 +19,9 @@ module.exports = {
   allWriters: () => {
     return db.load(`select * from  ${__TB_Writer__}`);
   },
+  singleWritersByIdUser: id => {
+    return db.load(`select pseudonym from  ${__TB_Writer__} where id_user = ${id}`);
+  },
 
   single: id => {
     return db.load(`select * from ${__TB_Users__} where ${__IDField__} = ${id}`);

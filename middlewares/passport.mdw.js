@@ -16,10 +16,7 @@ module.exports = function (app) {
         if (rows.length === 0) {
           return done(null, false, { message: 'Invalid username' });
         }
-
         var user = rows[0];
-        console.log("passport");
-        console.log(user);
         var ret = bcrypt.compareSync(t_password, user.password);
         if (ret) {
           return done(null, user);

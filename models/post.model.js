@@ -39,5 +39,10 @@ module.exports = {
 
   delete: id => {
     return db.delete("categories", "CatID", id);
+  },
+  
+  addPost: (entity) =>{
+    return db.add("post",entity);  
   }
+
 };
