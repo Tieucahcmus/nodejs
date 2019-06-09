@@ -11,8 +11,8 @@ router.get("/", (req, res) => {
   console.log(res.locals);
 
   // res.render("view_writers/index", {
-  //   layout: "writer"
-  // });
+    //   //   layout: "writer"
+    //   // });
 
   //phải đăng nhập và là writer thì mới được vào trang writer
   if (res.locals.isAuthenticated && res.locals.is_writer) {
@@ -71,10 +71,9 @@ router.get("/writing", (req, res) => {
 
 router.post("/writing", (req, res, next) => {
 
-  console.log(req.body);
+  res.end(req.body); 
   console.log(res.local);
 
-  
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     // res.end("view_writers/writing");
     res.render("view_writers/writing", {

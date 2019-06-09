@@ -66,9 +66,24 @@ router.get("/categories", (req, res, next) => {
       layout: false
     });
   }
-
-  // res.render("categories-post");
 });
+
+
+router.get("/categories/delete/:id", (req, res, next) => {  
+  var CatID=req.params.id;
+  var retUrl = req.query.retUrl || "/managers/categories";
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    categoryModel
+      .remove_category(CatID)
+      .then( res.redirect(retUrl) )
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
 
 router.get("/category/add", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {

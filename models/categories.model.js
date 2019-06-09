@@ -63,5 +63,10 @@ module.exports = {
 
   delete: id => {
     return db.delete(__TB_Category__, "CatID", id);
+  },
+  
+  remove_category : id =>{
+    return db.remove('category','id',id)
   }
+
 };

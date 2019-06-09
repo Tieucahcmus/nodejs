@@ -118,7 +118,7 @@ router.post("/logout", restricted, (req, res, next) => {
 });
 
 router.get("/profile", restricted, (req, res, next) => {
-  res.end("PROFILE");
+  res.render('view_users/edit-profile');
 });
 
 module.exports = router;
