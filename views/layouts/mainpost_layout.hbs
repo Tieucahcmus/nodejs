@@ -171,7 +171,8 @@
 
 
                                     {{!-- LOAD CATEGORIES --}}
-                                    {{#each post_categories}}
+                                    {{!-- from middleware --}}
+                                    {{#each post_categories_mdw}}
                                     <li><a href="/posts/{{slug_name}}">{{name}}</a>
                                         <ul class="dropdown" style="width: 260px">
                                             {{#each ../post_subcategories}}

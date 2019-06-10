@@ -9,6 +9,7 @@
 <script src="/plugins/tinymce/js/tinymce/themes/silver/theme.min.js"></script>
 <script src="/js/wysiwyg/fileinput.min.js"></script>
 
+<script src="/mfunctions/functions.js"></script>
 <script>
     $(function () {
 
@@ -22,7 +23,7 @@
         });
 
         tinymce.init({
-            selector: "#txtFullDes",
+            selector: "#txtaContent",
             menubar: false,
             height: 600,
             plugins: 'paste image link autolink lists table media',
@@ -35,20 +36,20 @@
             image_caption: true,
             entity_encoding: "raw",
             setup: function (editor) {
-                        editor.on('change', function () {
-                            editor.save();
-                        });
-                    }
+                editor.on('change', function () {
+                    editor.save();
+                });
+            }
         });
     })
 </script>
-<script src="/mfunctions/functions.js"></script>
+
 {{/section}}
 
 <form action="" method="POST">
     <div class="card shadow">
         <h5 class="card-header">
-            New Product
+            <label>Writing Post</label>
         </h5>
         <div class="card-body">
             <div class="form-group">
@@ -80,13 +81,13 @@
             </div>
 
             <div class="form-group">
-                <label for="txtFullDes">Content</label>
-                <textarea class="form-control" id="txtFullDes" name="FullDes"></textarea>
+                <label for="txtaContent">Content</label>
+                <textarea class="form-control" id="txtaContent" name="txtaContent"></textarea>
             </div>
         </div>
-         {{#if isAuthenticated}}
-            <input type="hidden" name="writer_id" value="{{authUser.id}}">
-         {{/if}}
+        {{#if isAuthenticated}}
+        <input type="hidden" name="writer_id" value="{{authUser.id}}">
+        {{/if}}
         <div class="card-footer text-right">
             <button type="submit" class="btn btn-success btn-block">
                 <i class="fa fa-check" aria-hidden="true"></i>
