@@ -10,6 +10,10 @@ module.exports = {
     return db.load(`select * from  ${__TB_Category__}`);
   },
 
+  //load tuần tự
+  all_sequentially: fn => {
+    return db.load_sequentially(`select * from  ${__TB_Category__}`, fn);
+  },
   allSubCategory1: () => {
     return db.load(`select * from  ${__TB_SubCategory__}`);
   },
@@ -34,11 +38,9 @@ module.exports = {
   },
 
   singleBy: (Table, Field, Key) => {
-    return db.load(
-      `select * from ${Table} where ${Field} = '${Key}'`
-    );
+    return db.load(`select * from ${Table} where ${Field} = '${Key}'`);
   },
-  singleByIs: (Table, Field, Key,is_delete) => {
+  singleByIs: (Table, Field, Key, is_delete) => {
     return db.load(
       `select * from ${Table} where ${Field} = '${Key}' and is_delete = '${is_delete}'`
     );
@@ -69,9 +71,8 @@ module.exports = {
   delete: id => {
     return db.delete(__TB_Category__, "id", id);
   },
-  
-  remove_category : id =>{
-    return db.remove('category','id',id)
-  }
 
+  remove_category: id => {
+    return db.remove("category", "id", id);
+  }
 };

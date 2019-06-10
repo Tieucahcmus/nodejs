@@ -6,6 +6,9 @@ var createError = require("http-errors");
 var numeral = require("numeral");
 var hbs_helpers = require("handlebars-helpers")();
 
+var http = require("http");
+var url = require("url");
+
 var categoryModel = require("./models/categories.model");
 var utils = require("./utils/utils");
 
@@ -49,32 +52,32 @@ require("./middlewares/session.mdw")(app);
 require("./middlewares/passport.mdw")(app);
 
 // require("./middlewares/upload")(app);
+app.use(require("./middlewares/post.mdw"));
 app.use(require("./middlewares/auth.mdw"));
-// app.use(require("./middlewares/post.mdw"));
-
-
-
 
 // ==================== ROUTES ====================
 app.get("/", (req, res, next) => {
-  categoryModel
-    .all()
-    .then(rows => {
-      // console.log(rows);
-      categoryModel
-        .allSubCategory1()
-        .then(subs => {
-          // console.log(subs);
-          // console.log(res.locals.categories);
-          res.render("view_posts/home", {
-            post_categories: rows,
-            post_subcategories: subs
-          });
-        })
-        .catch(next);
-    })
-    .catch(next);
-  // res.render("view_posts/home");
+  // categoryModel
+  //   .all()
+  //   .then(rows => {
+  //     // console.log(rows);
+  //     categoryModel
+  //       .allSubCategory1()
+  //       .then(subs => {
+  //         // console.log(subs);
+  //         // console.log(res.locals.categories);
+  //         res.render("view_posts/home", {
+  //           post_categories: rows,
+  //           post_subcategories: subs
+  //         });
+  //       })
+  //       .catch(next);
+  //   })
+  //   .catch(next);
+  // console.log(res.locals.post_categories);
+  res.render("view_posts/home", {
+    // post_categories: res.locals.post_categories
+  });
 });
 
 app.use("/managers", require("./routes/managers.router"));

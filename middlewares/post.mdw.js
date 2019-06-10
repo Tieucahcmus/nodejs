@@ -1,13 +1,25 @@
-// var categoryModel = require("../models/categories.model");
+var categoryModel = require("../models/categories.model");
+var url = require("url");
+module.exports = (req, res, next) => {
+  console.log("req.post.mdw");
+  // console.log(url.parse(req.url));
+  pathname = url.parse(req.url).pathname;
+  var split_pathname = pathname.split("/");
+  console.log(pathname);
+  console.log(split_pathname);
 
-// module.exports = (req, res, next) => {
-//   // console.log(req);
-//   if (req) {
-//     //middle ware category cho navbar
-//     categoryModel
-//       .all()
-//       .then(categories=>)
-//       .next(next);
-//   }
-//   next();
-// };
+  //nếu là trang chủ hoặc nếu là các trang /posts/?
+  if (pathname == "/" || split_pathname[1] == "posts") {
+    //thì load categories lên res.locals
+    categoryModel
+      .all()
+      .then(categories => {
+        res.locals.post_categories_mdw = categories;
+        // console.log(res.locals.post_categories_mdw);
+        next();
+      })
+      .catch(next);
+  } else {
+    next();
+  }
+};

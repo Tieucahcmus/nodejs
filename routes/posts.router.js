@@ -7,13 +7,8 @@ var router = express.Router();
 // categories cho navbar
 
 router.get("/categories", (req, res) => {
-  categoryModel.all().then(cats => {
-    categoryModel.allSubCategory1().then(subs => {
-      res.render("view_posts/categories-post", {
-        post_categories: cats,
-        post_subcategories: subs
-      });
-    });
+  res.render("view_posts/categories-post", {
+    // post_subcategories: res.locals.post_categories
   });
 });
 
@@ -39,29 +34,24 @@ router.get("/category/:id", (req, res, next) => {
     });
     return;
   }
-  categoryModel.all().then(cats => {
-    categoryModel.allSubCategory1().then(subs => {
-      postModel.single(id).then(rows => {
-        if (rows.length > 0) {
-          // console.log("post.router rows");
-          // console.log(rows);
-          // console.log("post.router rows[0]");
-          // console.log(rows[0]);
-          // console.log(rows[0].content);
+  postModel.single(id).then(rows => {
+    if (rows.length > 0) {
+      // console.log("post.router rows");
+      // console.log(rows);
+      // console.log("post.router rows[0]");
+      // console.log(rows[0]);
+      // console.log(rows[0].content);
 
-          res.render("view_posts/single-post_publish", {
-            error: false,
-            post_publish: rows[0],
-            post_categories: cats,
-            post_subcategories: subs
-          });
-        } else {
-          res.render("error", {
-            error: true
-          });
-        }
+      res.render("view_posts/single-post_publish", {
+        error: false,
+        post_publish: rows[0],
+        // post_categories: res.locals.post_categories
       });
-    });
+    } else {
+      res.render("error", {
+        error: true
+      });
+    }
   });
 });
 

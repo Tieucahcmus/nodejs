@@ -85,19 +85,20 @@ module.exports = {
     });
   },
 
-  // seq_load: (sql, fn) => {
-  //   var connection = createConnection();
-  //   connection.connect();
-  //   connection.query(sql, (error, results, fields) => {
-  //     if (error) {
-  //       console.log(error.sqlMessage);
-  //     } else {
-  //       // console.log(results);
-  //       fn(results);
-  //     }
-  //     connection.end();
-  //   });
-  // },
+  // load tuần tự, không như promise
+  load_sequentially: (sql, fn) => {
+    var connection = createConnection();
+    connection.connect();
+    connection.query(sql, (error, results, fields) => {
+      if (error) {
+        console.log(error.sqlMessage);
+      } else {
+        // console.log(results);
+        fn(results);
+      }
+      connection.end();
+    });
+  },
 
   // add: (tableName, entity, fn) => {
   //   var connection = createConnection();

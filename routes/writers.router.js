@@ -5,18 +5,42 @@ var categoryModel = require("../models/categories.model");
 var config = require("../config/default.json");
 var router = express.Router();
 
-router.get("/", (req, res) => {
-  //phải đăng nhập và là writer thì mới được vào trang writer
-  if (/*res.locals.isAuthenticated && res.locals.is_writer*/ true) {
-    res.render("view_writers/index", {
-      layout: "writer_layout"
-    });
+router.get("/:id", (req, res) => {
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
+    var id= req.params.id;
+    postModel
+      .AllPostbyId(id)
+      .then(rows => {
+        res.render("view_writers/index", {
+          layout: "writer_layout",
+          post: rows
+        });
+      })
   } else {
     res.render("404", {
       layout: false
     });
   }
 });
+
+router.get("/delete/:post_id", (req, res, next) => {  
+  var post_id=req.params.post_id;
+  var retUrl = req.query.retUrl || "/";
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
+    postModel
+      .remove(post_id)
+      .then( res.redirect(retUrl) )
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+
+router.get("/edit/:post_id", (req, res) => {
+ });
 
 router.get("/tables", (req, res) => {
   //phải đăng nhập và là writer thì mới được vào trang writer
@@ -71,7 +95,7 @@ router.post("/writing", (req, res, next) => {
     id_category :req.body.category,
     content :req.body.FullDes,
     id_user: user_id,
-    pseudonym: 'đéo biết lấy bút danh'
+    pseudonym: 'k biết lấy bút danh' // thiếu 1 số column
   };
   if (res.locals.isAuthenticated && res.locals.is_writer) {
        postModel
