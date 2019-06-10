@@ -15,11 +15,12 @@ module.exports = (req, res, next) => {
       .all()
       .then(categories => {
         res.locals.post_categories_mdw = categories;
-        // console.log(res.locals.post_categories_mdw);
+        console.log(res.locals.post_categories_mdw);
         next();
       })
       .catch(next);
   } else {
+    console.log("!pathname");
     next();
   }
 };

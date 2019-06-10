@@ -57,27 +57,7 @@ app.use(require("./middlewares/auth.mdw"));
 
 // ==================== ROUTES ====================
 app.get("/", (req, res, next) => {
-  // categoryModel
-  //   .all()
-  //   .then(rows => {
-  //     // console.log(rows);
-  //     categoryModel
-  //       .allSubCategory1()
-  //       .then(subs => {
-  //         // console.log(subs);
-  //         // console.log(res.locals.categories);
-  //         res.render("view_posts/home", {
-  //           post_categories: rows,
-  //           post_subcategories: subs
-  //         });
-  //       })
-  //       .catch(next);
-  //   })
-  //   .catch(next);
-  // console.log(res.locals.post_categories);
-  res.render("view_posts/home", {
-    // post_categories: res.locals.post_categories
-  });
+  res.render("view_posts/home");
 });
 
 app.use("/managers", require("./routes/managers.router"));

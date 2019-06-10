@@ -23,7 +23,7 @@
         });
 
         tinymce.init({
-            selector: "#txtaContent",
+            selector: "#content",
             menubar: false,
             height: 600,
             plugins: 'paste image link autolink lists table media',
@@ -81,8 +81,8 @@
             </div>
 
             <div class="form-group">
-                <label for="txtaContent">Content</label>
-                <textarea class="form-control" id="txtaContent" name="txtaContent"></textarea>
+                <label for="content">Content</label>
+                <textarea class="form-control" id="content" name="content"></textarea>
             </div>
         </div>
         {{#if isAuthenticated}}

@@ -1,13 +1,12 @@
 var express = require("express");
-var userModel = require("../models/user.model");
 var postModel = require("../models/post.model");
 var categoryModel = require("../models/categories.model");
-var config = require("../config/default.json");
 var router = express.Router();
 
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
+  console.log("get id");
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-    var id= req.params.id;
+    var id = req.params.id;
     postModel
       .AllPostbyId(id)
       .then(rows => {
@@ -16,20 +15,6 @@ router.get("/:id", (req, res) => {
           post: rows
         });
       })
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-});
-
-router.get("/delete/:post_id", (req, res, next) => {  
-  var post_id=req.params.post_id;
-  var retUrl = req.query.retUrl || "/";
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    postModel
-      .remove(post_id)
-      .then( res.redirect(retUrl) )
       .catch(next);
   } else {
     res.render("404", {
@@ -38,16 +23,14 @@ router.get("/delete/:post_id", (req, res, next) => {
   }
 });
 
-
-router.get("/edit/:post_id", (req, res) => {
- });
-
-router.get("/tables", (req, res) => {
-  //phải đăng nhập và là writer thì mới được vào trang writer
+router.get("/delete/:post_id", (req, res, next) => {
+  var post_id = req.params.post_id;
+  var retUrl = req.query.retUrl || "/";
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-    res.render("view_writers/vm_neat/tables", {
-      layout: "writer_layout"
-    });
+    postModel
+      .remove(post_id)
+      .then(res.redirect(retUrl))
+      .catch(next);
   } else {
     res.render("404", {
       layout: false
@@ -55,29 +38,21 @@ router.get("/tables", (req, res) => {
   }
 });
 
-router.get("/charts", (req, res) => {
-  //phải đăng nhập và là writer thì mới được vào trang writer
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    res.render("view_writers/vm_neat/charts", {
-      layout: "writer_layout"
-    });
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
+router.get("/edit/:post_id", (req, res, next) => {
+  res.end("edit");
 });
 
-router.get("/writing", (req, res) => {
+router.get("/writing", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     categoryModel
-    .all()
-    .then(rows => {
-      res.render("view_writers/writing", {
-        layout: "writer_layout",
-        category:rows
-      });
-    })
+      .all()
+      .then(rows => {
+        res.render("view_writers/writing", {
+          layout: "writer_layout",
+          category: rows
+        });
+      })
+      .catch(next);
   } else {
     res.render("404", {
       layout: false
@@ -85,20 +60,20 @@ router.get("/writing", (req, res) => {
   }
 });
 
-
 router.post("/writing", (req, res, next) => {
-  var user_id=req.body.writer_id;
-  const entity ={
-    title : req.body.title,
+  console.log("post /writing");
+  var user_id = req.body.writer_id;
+  const entity = {
+    title: req.body.title,
     slug_title: req.body.slug,
-    summary :req.body.summary,
-    id_category :req.body.category,
-    content :req.body.FullDes,
+    summary: req.body.summary,
+    id_category: req.body.category,
+    content: req.body.content,
     id_user: user_id,
-    pseudonym: 'k biết lấy bút danh' // thiếu 1 số column
+    pseudonym: "k biết lấy bút danh" // thiếu 1 số column
   };
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-       postModel
+    postModel
       .addPost(entity)
       .then(id => {
         res.render("view_writers/writing", {
@@ -112,121 +87,6 @@ router.post("/writing", (req, res, next) => {
     });
   }
 });
- 
-  // if (res.locals.isAuthenticated && res.locals.is_writer) {
-  //   // res.end("view_writers/writing");
-  //   res.render("view_writers/writing", {
-  //     layout: "writer_layout"
-  //   });
-  // } else {
-  //   res.render("404", {
-  //     layout: false
-  //   });
-  // }
 
-  // res.render("categories-post");
-
-router.get("/subcategories1", (req, res) => {
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    res.end("managers/subcategories1");
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-
-  // res.render("categories-post");
-});
-
-router.get("/user_permission", (req, res) => {
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    res.end("managers/user_permission");
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-
-  // res.render("categories-post");
-});
-
-router.get("/users", (req, res, next) => {
-  // res.end("managers/users")
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    userModel
-      .allForTable()
-      .then(rows => {
-        res.render("view_writers/vm_users/m_user", {
-          layout: "writer_layout",
-          users: rows
-        });
-      })
-      .catch(next);
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-});
-
-router.get("/posts", (req, res) => {
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    res.end("managers/posts");
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-
-  // res.render("categories-post");
-});
-
-router.get("/comments", (req, res) => {
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    res.end("managers/comments");
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-
-  // res.render("categories-post");
-});
-
-router.get("/post_images", (req, res) => {
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    res.end("managers/post_images");
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-
-  // res.render("categories-post");
-});
-
-router.get("/subscribers", (req, res) => {
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    res.end("managers/subscribers");
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-
-  // res.render("categories-post");
-});
-
-router.get("/writers", (req, res) => {
-  if (res.locals.isAuthenticated && res.locals.is_writer) {
-    res.end("managers/writers");
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-
-  // res.render("categories-post");
-});
 
 module.exports = router;

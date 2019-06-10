@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
     }
     else if (+res.locals.authUser.id_permission === 3) {
       res.locals.is_writer = true;
-      
+      console.log("is_writer");
     }
     else if (+res.locals.authUser.id_permission === 4) {
       res.locals.is_subcriber = true;
