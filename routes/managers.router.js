@@ -6,9 +6,6 @@ var config = require("../config/default.json");
 var router = express.Router();
 
 router.get("/", (req, res) => {
-  console.log("managers");
-  console.log(res.body);
-  console.log(res.locals);
 
   //phải đăng nhập và là admin thì mới được vào trang admin
   if (res.locals.isAuthenticated && res.locals.is_admin) {
@@ -247,17 +244,12 @@ router.get("/subcategory1/add", (req, res, next) => {
 
 router.post("/subcategory1/add", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {
-    console.log("post/subcategory1/add");
-    console.log(req.body);
-
     var entity = {
       table: "subcategory",
       name: req.body.subname,
       slug_name: req.body.slug_name,
       id_category: +req.body.chooseCat
     };
-
-    console.log(entity);
     if (id_category >= 0) {
       categoryModel
         .add_Table(entity)
@@ -280,21 +272,14 @@ router.post("/subcategory1/add", (req, res, next) => {
     });
   }
 
-  // res.render("view_managers/vm_categories/m_subcategory1_add", {
-  //   layout: "sbadmin_layout"
-  // });
 });
 
 router.get("/subcategory1/subname-is-available", (req, res, next) => {
   var subname = req.query.exist_subname;
-  console.log("subcategory1/subname-is-available");
-  console.log(subname);
   categoryModel.singleBy("subcategory", "name", subname).then(rows => {
     if (rows.length > 0) {
-      console.log("false");
       res.json(false);
     } else {
-      console.log("true");
       res.json(true);
     }
   });
@@ -302,8 +287,6 @@ router.get("/subcategory1/subname-is-available", (req, res, next) => {
 
 router.get("/subcategory1/slug_name-is-available", (req, res, next) => {
   var slug_name = req.query.exist_slug_name;
-  console.log("subcategory1/slug_name-is-available");
-  console.log(slug_name);
   categoryModel.singleBy("subcategory", "slug_name", slug_name).then(rows => {
     if (rows.length > 0) {
       console.log("false");
@@ -398,7 +381,6 @@ router.get("/subscribers", (req, res) => {
 
 router.get("/writers", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {
-    // res.end("managers/writers");
     userModel
       .allWriters()
       .then(rows => {

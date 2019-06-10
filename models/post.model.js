@@ -20,7 +20,9 @@ module.exports = {
   single: id => {
     return db.load(`select * from ${__Table__} where ${__IDField__} = ${id}`);
   },
-
+  AllPostbyId: id => {
+    return db.load(`select * from ${__Table__} where id_user = ${id} and is_delete = 0`);
+  },
   /**
    * @param {*} entity { CatName: ... }
    */
@@ -35,6 +37,10 @@ module.exports = {
     var id = entity.CatID;
     delete entity.CatID;
     return db.update("categories", "CatID", entity, id);
+  },
+
+  remove : id =>{
+    return db.remove('post','id',id);
   },
 
   delete: id => {
