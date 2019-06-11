@@ -1,12 +1,12 @@
 var db = require("../utils/db");
 
-var __Table__ = "post";
+var __TB_Post__ = "post";
 var __IDField__ = "id";
 var __where_Field__ = "username";
 
 module.exports = {
   all: () => {
-    return db.load(`select * from  ${__Table__}`);
+    return db.load(`select * from  ${__TB_Post__}`);
   },
 
   allWithDetails: () => {
@@ -18,16 +18,26 @@ module.exports = {
   },
 
   single: id => {
-    return db.load(`select * from ${__Table__} where ${__IDField__} = ${id}`);
+    return db.load(`select * from ${__TB_Post__} where ${__IDField__} = ${id}`);
   },
+
+  single_writer: id_user => {
+    return db.load(`
+    select w.*
+    from users u join writer w on u.id = w.id_user
+    where u.id = ${id_user}`);
+  },
+
   AllPostbyId: id => {
-    return db.load(`select * from ${__Table__} where id_user = ${id} and is_delete = 0`);
+    return db.load(
+      `select * from ${__TB_Post__} where id_user = ${id} and is_delete = 0`
+    );
   },
   /**
    * @param {*} entity { CatName: ... }
    */
   add: entity => {
-    return db.add(__Table__, entity);
+    return db.add(__TB_Post__, entity);
   },
 
   /**
@@ -39,16 +49,15 @@ module.exports = {
     return db.update("categories", "CatID", entity, id);
   },
 
-  remove : id =>{
-    return db.remove('post','id',id);
+  remove: id => {
+    return db.remove("post", "id", id);
   },
 
   delete: id => {
     return db.delete("categories", "CatID", id);
   },
-  
-  addPost: (entity) =>{
-    return db.add("post",entity);  
-  }
 
+  addPost: entity => {
+    return db.add("post", entity);
+  }
 };
