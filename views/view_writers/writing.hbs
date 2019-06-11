@@ -55,38 +55,58 @@
             <div class="form-group">
                 <label for="title">Title</label>
                 <div class="">
-                    <input id="title" name="title" class="form-control" onkeyup="ChangeToSlug();" type="text">
+                    <input id="title" name="title" required class="form-control" onkeyup="ChangeToSlug();" type="text">
                 </div>
             </div>
             <div class="form-group">
                 <label for="title">Slug</label>
                 <div class="">
-                    <input id="slug" name="slug" class="form-control" type="text">
+                    <input id="slug" required name="slug" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
                 <select name="category" class="form-control">
-                    <option value="">--</option>
+                    <option value="0">--</option>
                     {{#each this.category}}
                     <option value="{{id}}">{{name}}</option>
                     {{/each}}
                 </select>
             </div>
+            <div class="card">
+                <div class="card-header">
+                    Tag
+                </div>
+                <div class="">
+                    <div class="card-body">
+                        <div>
+                            <button class="btn btn-primary"><input type="checkbox" name="tagKT" >Kinh Tế</button>&nbsp;
+                            <button class="btn btn-primary"><input type="checkbox" name="tagCT"  >Chính Trị</button>&nbsp;
+                            <button class="btn btn-primary"><input type="checkbox" name="tagXH" >Xã Hội</button>&nbsp;
+                            <button class="btn btn-primary"><input type="checkbox" name="tagTG" >Thế Giới</button>&nbsp;
+                            <button class="btn btn-primary"><input type="checkbox" name="tagVT" >Vũ Trụ</button>&nbsp;
+                            <button class="btn btn-primary"><input type="checkbox" name="tagCN" >Công Nghệ</button>&nbsp;
+                            <button class="btn btn-primary"><input type="checkbox" name="tagDA" >Điện Ảnh</button>&nbsp;
+                            <button class="btn btn-primary"><input type="checkbox" name="tagPL" >Pháp Luật</button>&nbsp;
+                            <button class="btn btn-primary"><input type="checkbox" name="tagGD" >Giáo Dục</button>&nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="summary">Summary</label>
                 <div class="">
-                    <textarea id="summary" name="summary" class="form-control" type="text"></textarea>
+                    <textarea id="summary" name="summary"  required class="form-control" type="text"></textarea>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="content">Content</label>
-                <textarea class="form-control" id="content" name="content"></textarea>
+                <textarea class="form-control" id="content" required name="content"></textarea>
             </div>
         </div>
         {{#if isAuthenticated}}
-        <input type="hidden" name="writer_id" value="{{authUser.id}}">
+          <input type="hidden" name="writer_id" value="{{authUser.id}}">
         {{/if}}
         <div class="card-footer text-right">
             <button type="submit" class="btn btn-success btn-block">
@@ -96,3 +116,6 @@
         </div>
     </div>
 </form>
+
+
+

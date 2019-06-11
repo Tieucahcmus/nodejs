@@ -3,12 +3,10 @@ var postModel = require("../models/post.model");
 var categoryModel = require("../models/categories.model");
 var router = express.Router();
 
-router.get("/:id", (req, res, next) => {
-  console.log("get id");
+router.get("/", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-    var id = req.params.id;
     postModel
-      .AllPostbyId(id)
+      .AllPostbyId(req.user.id)
       .then(rows => {
         res.render("view_writers/index", {
           layout: "writer_layout",
@@ -23,12 +21,11 @@ router.get("/:id", (req, res, next) => {
   }
 });
 
-router.get("/delete/:post_id", (req, res, next) => {
-  var post_id = req.params.post_id;
-  var retUrl = req.query.retUrl || "/";
+router.get("/delete/:id", (req, res, next) => {
+  var retUrl = req.query.retUrl || "/writers";
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     postModel
-      .remove(post_id)
+      .remove(req.params.id)
       .then(res.redirect(retUrl))
       .catch(next);
   } else {
@@ -38,8 +35,8 @@ router.get("/delete/:post_id", (req, res, next) => {
   }
 });
 
-router.get("/edit/:post_id", (req, res, next) => {
-  res.end("edit");
+router.get("/edit/:id", (req, res, next) => {
+  res.end("edit"+req.params.id);
 });
 
 router.get("/writing", (req, res, next) => {
@@ -61,22 +58,62 @@ router.get("/writing", (req, res, next) => {
 });
 
 router.post("/writing", (req, res, next) => {
-  console.log("post /writing");
-  var user_id = req.body.writer_id;
+  var tag = new Array();
+
+  if(req.body.tagKT == 'on')
+  { tag.push('Kinh Tế'); }
+
+  if(req.body.tagCT == 'on')
+  { tag.push('Chính Trị'); }
+
+  if(req.body.tagXH == 'on')
+  { tag.push('Xã Hội'); }
+
+  if(req.body.tagTG == 'on')
+  { tag.push('Thế Giới'); }
+
+  if(req.body.tagCN == 'on')
+  { tag.push('Công Nghệ'); }
+
+  if(req.body.tagDA == 'on')
+  { tag.push('Điện Ảnh'); }
+
+  if(req.body.tagPL == 'on')
+  { tag.push('Pháp Luật'); }
+
+  if(req.body.tagGD == 'on')
+  { tag.push('Giáo Dục'); }
+
+  var str_tag ="";
+  if(tag.length > 0)
+  {
+    for(var i=0;i<tag.length;i++ )
+    {
+      str_tag +=tag[i];
+      if(i!=tag.length-1){
+        str_tag +=",";
+      }
+    }
+  }
   const entity = {
     title: req.body.title,
     slug_title: req.body.slug,
     summary: req.body.summary,
     id_category: req.body.category,
     content: req.body.content,
-    id_user: user_id,
-    pseudonym: "k biết lấy bút danh" // thiếu 1 số column
+    id_user: req.body.writer_id,
+    pseudonym:res.locals.writer_mdw[0]['pseudonym'],
+    tag : str_tag
   };
+
+  if(req.body.category == 0){
+    res.redirect("/writers/writing");
+  }else{
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     postModel
       .addPost(entity)
       .then(id => {
-        res.render("view_writers/writing", {
+        res.render("view_writers/index", {
           layout: "writer_layout"
         });
       })
@@ -86,6 +123,7 @@ router.post("/writing", (req, res, next) => {
       layout: false
     });
   }
+}
 });
 
 

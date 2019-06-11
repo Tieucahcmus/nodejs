@@ -105,6 +105,7 @@
                     <th>Post Date</th>
                     <th>Last Update</th>
                     <th>Tag</th>
+                    <th>Status</th>
                     <th>Tools</th>
                   </tr>
                 </thead>{{#each this.post }}
@@ -118,6 +119,7 @@
                     <td>{{post_date}}</td>
                     <td>{{last_update}}</td>
                     <td>{{tag}}</td>
+                    <td>{{status}}</td>
                     <td>
                        <a class="btn btn-primary form-control"  href="/writers/edit/{{id}}"><i class="fa fa-pencil"></i></a> &nbsp;
                        <a class="btn btn-danger form-control"  href="/writers/delete/{{id}}"><i class="fa fa-trash"></i></a>

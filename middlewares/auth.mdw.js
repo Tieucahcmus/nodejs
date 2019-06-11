@@ -2,10 +2,8 @@ var postModel = require("../models/post.model");
 
 module.exports = (req, res, next) => {
   if (req.user) {
-    console.log("auth.mdw");
     res.locals.isAuthenticated = true;
     res.locals.authUser = req.user;
-    console.log(res.locals.authUser);
     if (+res.locals.authUser.id_permission === 1) 
     {
       res.locals.is_admin = true;
@@ -20,8 +18,7 @@ module.exports = (req, res, next) => {
       postModel
         .single_writer(req.user.id)
         .then(writer => {
-          res.locals.writer_mdw =writer;
-          console.log(res.locals.writer_mdw);
+          res.locals.writer_mdw = writer;
           next();
         })
         .catch(next);
