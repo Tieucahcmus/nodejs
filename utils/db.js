@@ -68,11 +68,11 @@ module.exports = {
   },
 
   //update isDelete = 1
-  remove: (tableName, idField, id) => {
+  remove: (tableName, idField, id,status) => {
     return new Promise((resolve, reject) => {
       var connection = createConnection();
       var is_deleteField = 'is_delete'
-      var sql = `update ${tableName} set ${is_deleteField} = 1 where ${idField} = ?`;
+      var sql = `update ${tableName} set ${is_deleteField} = ${status} where ${idField} = ?`;
       connection.connect();
       connection.query(sql, id, (error, results, fields) => {
         if (error) {

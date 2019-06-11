@@ -36,8 +36,24 @@ router.get("/delete/:id", (req, res, next) => {
   }
 });
 
-router.get("/edit/:id", (req, res, next) => {
-  res.end("edit"+req.params.id);
+router.get("/edit/:id", (req, res, next) =>{
+    res.end("page edit post id=> "+req.params.id);
+});
+
+
+//route này có thể đổi thành quyền admin or editor
+router.get("/backup/:id", (req, res, next) => {
+  var retUrl = req.query.retUrl || "/writers";
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
+    postModel
+      .backup(req.params.id)
+      .then(res.redirect(retUrl))
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
 });
 
 router.get("/writing", (req, res, next) => {
@@ -92,7 +108,7 @@ router.post("/writing", (req, res, next) => {
     {
       str_tag +=tag[i];
       if(i!=tag.length-1){
-        str_tag +="-";
+        str_tag +="_";
       }
     }
   }
@@ -108,15 +124,13 @@ router.post("/writing", (req, res, next) => {
   };
 
   if(req.body.category == 0){
-    res.redirect("/writers/writing");
+    res.redirect("/writers");
   }else{
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     postModel
       .addPost(entity)
       .then(id => {
-        res.render("view_writers/index", {
-          layout: "writer_layout"
-        });
+        res.redirect("/writers");
       })
       .catch(next);
   } else {
