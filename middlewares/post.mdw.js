@@ -14,9 +14,15 @@ module.exports = (req, res, next) => {
     categoryModel
       .all()
       .then(categories => {
-        res.locals.post_categories_mdw = categories;
-        console.log(res.locals.post_categories_mdw);
-        next();
+        categoryModel
+          .allSubCategory1()
+          .then(subcategories => {
+            res.locals.post_categories_mdw = categories;
+            res.locals.post_subcategories_mdw = subcategories;
+            // console.log(res.locals.post_categories_mdw);
+            next();
+          })
+          .catch(next);
       })
       .catch(next);
   } else {
