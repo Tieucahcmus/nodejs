@@ -11,7 +11,7 @@ var url = require("url");
 
 var categoryModel = require("./models/categories.model");
 var utils = require("./utils/utils");
-
+var postModel = require("./models/post.model");
 var app = express();
 
 // ==================== USE ====================
@@ -57,7 +57,25 @@ app.use(require("./middlewares/auth.mdw"));
 
 // ==================== ROUTES ====================
 app.get("/", (req, res, next) => {
-  res.render("view_posts/home");
+  postModel
+      .postLimit(4)
+      .then(rows => {
+        res.render("view_posts/home", {
+          post: rows
+        });
+      })
+      .catch(next);
+});
+
+app.get("/read/:tag/:id/:slug_title", (req, res, next) => {
+    postModel
+    .single(req.params.id)
+    .then(rows=>{
+      res.render("view_posts/single-post", {
+      post: rows[0],
+      tag: req.params.tag
+    });
+  });
 });
 
 app.use("/managers", require("./routes/managers.router"));
@@ -127,4 +145,3 @@ app.listen(port, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-// =======

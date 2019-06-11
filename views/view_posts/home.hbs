@@ -6,7 +6,6 @@
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-8">
                     <div class="row">
-
                         <!-- Single Featured Post -->
                         <div class="col-12 col-lg-7">
                             <div class="single-blog-post featured-post">
@@ -201,16 +200,16 @@
                     <div class="row">
 
                         <!-- Single Post -->
+                        {{#each this.post}}
                         <div class="col-12 col-md-6">
                             <div class="single-blog-post style-3">
                                 <div class="post-thumb">
-                                    <a href="#"><img src="img/bg-img/12.jpg" alt=""></a>
+                                    <a href="/read/{{tag}}/{{id}}/{{slug_title}}"><img src="img/bg-img/12.jpg" alt=""></a>
                                 </div>
                                 <div class="post-data">
-                                    <a href="#" class="post-catagory">Finance</a>
+                                    <a href="/read/{{tag}}/{{id}}/{{slug_title}}" class="post-catagory"><h4>{{title}}</h4></a>
                                     <a href="#" class="post-title">
-                                        <h6>Dolor sit amet, consectetur adipiscing elit. Nam eu metus sit amet odio
-                                            sodales placer. Sed varius leo ac...</h6>
+                                        <h6>{{summanry}}</h6>
                                     </a>
                                     <div class="post-meta d-flex align-items-center">
                                         <a href="#" class="post-like"><img src="img/core-img/like.png" alt="">
@@ -221,9 +220,9 @@
                                 </div>
                             </div>
                         </div>
-
+                        {{/each}}
                         <!-- Single Post -->
-                        <div class="col-12 col-md-6">
+                        {{!-- <div class="col-12 col-md-6">
                             <div class="single-blog-post style-3">
                                 <div class="post-thumb">
                                     <a href="#"><img src="img/bg-img/13.jpg" alt=""></a>
@@ -286,7 +285,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -299,39 +298,14 @@
                         <h3>4 Most Popular News</h3>
 
                         <!-- Single Popular Blog -->
+                        {{#each this.post}}
                         <div class="single-popular-post">
                             <a href="#">
-                                <h6><span>1.</span> Amet, consectetur adipiscing elit. Nam eu metus sit amet odio
-                                    sodales.</h6>
+                                <h6><span>{{id}}</span> {{title}}.</h6>
                             </a>
                             <p>April 14, 2018</p>
                         </div>
-
-                        <!-- Single Popular Blog -->
-                        <div class="single-popular-post">
-                            <a href="#">
-                                <h6><span>2.</span> Consectetur adipiscing elit. Nam eu metus sit amet odio sodales
-                                    placer.</h6>
-                            </a>
-                            <p>April 14, 2018</p>
-                        </div>
-
-                        <!-- Single Popular Blog -->
-                        <div class="single-popular-post">
-                            <a href="#">
-                                <h6><span>3.</span> Adipiscing elit. Nam eu metus sit amet odio sodales placer. Sed
-                                    varius leo.</h6>
-                            </a>
-                            <p>April 14, 2018</p>
-                        </div>
-
-                        <!-- Single Popular Blog -->
-                        <div class="single-popular-post">
-                            <a href="#">
-                                <h6><span>4.</span> Eu metus sit amet odio sodales placer. Sed varius leo ac...</h6>
-                            </a>
-                            <p>April 14, 2018</p>
-                        </div>
+                        {{/each}}
                     </div>
 
                     <!-- Newsletter Widget -->

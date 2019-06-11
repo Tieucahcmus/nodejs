@@ -8,6 +8,10 @@ module.exports = {
   all: () => {
     return db.load(`select * from  ${__TB_Post__}`);
   },
+  
+  postLimit: (n) => {
+    return db.load(`select * from  ${__TB_Post__} limit ${n}`);
+  },
 
   allWithDetails: () => {
     return db.load(`
@@ -30,7 +34,7 @@ module.exports = {
 
   AllPostbyId: id => {
     return db.load(
-      `select * from ${__TB_Post__} where id_user = ${id} and is_delete = 0`
+      `select * from ${__TB_Post__} where id_user = ${id}`
     );
   },
   /**

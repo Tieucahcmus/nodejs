@@ -10,7 +10,8 @@ router.get("/", (req, res, next) => {
       .then(rows => {
         res.render("view_writers/index", {
           layout: "writer_layout",
-          post: rows
+          post: rows,
+          count: rows.length
         });
       })
       .catch(next);
@@ -91,7 +92,7 @@ router.post("/writing", (req, res, next) => {
     {
       str_tag +=tag[i];
       if(i!=tag.length-1){
-        str_tag +=",";
+        str_tag +="-";
       }
     }
   }

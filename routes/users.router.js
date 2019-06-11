@@ -39,7 +39,7 @@ router.post("/register", (req, res, next) => {
   dnow.setDate(dnow.getDate() + 7);
   console.log(dnow);
   var expirationDate = moment(dnow).format("YYYY-MM-DD HH:mm:ss");
-  console.log(expirationDate);
+  // console.log(expirationDate);
 
   var insertData = {
     username: entity.username,
@@ -50,16 +50,16 @@ router.post("/register", (req, res, next) => {
     date_of_birth: dob
   };
 
-  console.log(insertData);
+  // console.log(insertData);
 
   //insert new user
   userModel.add(insertData).then(idUser => {
-    console.log("idUser" + idUser);
+    // console.log("idUser" + idUser);
     var Subscriber = {
       id_user: idUser,
       expiration_date: expirationDate
     };
-    console.log(Subscriber);
+    // console.log(Subscriber);
     //insert new Subscriber
     userModel.addSubscriber(Subscriber).then(idUser => {
       res.redirect("/users/login");
@@ -107,12 +107,11 @@ router.post("/login", (req, res, next) => {
 });
 
 router.post("/logout", restricted, (req, res, next) => {
-  console.log("before log out");
-  console.log(res.locals);
+  // console.log("before log out");
+  // console.log(res.locals);
   req.logout();
-
-  console.log("after log out");
-  console.log(res.locals);
+  // console.log("after log out");
+  // console.log(res.locals);
   // res.redirect('/users/login');
   res.redirect("/");
 });
