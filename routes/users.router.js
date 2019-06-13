@@ -53,18 +53,24 @@ router.post("/register", (req, res, next) => {
   // console.log(insertData);
 
   //insert new user
-  userModel.add(insertData).then(idUser => {
-    // console.log("idUser" + idUser);
-    var Subscriber = {
-      id_user: idUser,
-      expiration_date: expirationDate
-    };
-    // console.log(Subscriber);
-    //insert new Subscriber
-    userModel.addSubscriber(Subscriber).then(idUser => {
-      res.redirect("/users/login");
-    });
-  });
+  userModel
+    .add(insertData)
+    .then(idUser => {
+      // console.log("idUser" + idUser);
+      var Subscriber = {
+        id_user: idUser,
+        expiration_date: expirationDate
+      };
+      // console.log(Subscriber);
+      //insert new Subscriber
+      userModel
+        .addSubscriber(Subscriber)
+        .then(idUser => {
+          res.redirect("/users/login");
+        })
+        .catch(next);
+    })
+    .catch(next);
   // res.end("post");
   // res.redirect("/users/register");
 });
@@ -85,7 +91,9 @@ router.get("/login", (req, res, next) => {
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
-    if (err) return next(err);
+    if (err) {
+      return next(err);
+    }
     if (!user) {
       return res.render("view_users/login", {
         layout: false,
@@ -94,7 +102,9 @@ router.post("/login", (req, res, next) => {
     }
     var retUrl = req.query.retUrl || "/";
     req.logIn(user, err => {
-      if (err) return next(err);
+      if (err) {
+        return next(err);
+      }
       return res.redirect(retUrl);
     });
   })(req, res, next);
@@ -107,28 +117,29 @@ router.post("/logout", restricted, (req, res, next) => {
 
 router.get("/profile", restricted, (req, res, next) => {
   userModel
-      .single(req.user.id)
-      .then(rows => {
-        res.render("view_users/edit-profile", {
-          info: rows[0],
-          pseudonym: res.locals.writer_mdw[0]['pseudonym']
-        });
-      })
-      .catch(next);
-  });
+    .single(req.user.id)
+    .then(rows => {
+      res.render("view_users/edit-profile", {
+        info: rows[0],
+        pseudonym: res.locals.writer_mdw[0]["pseudonym"]
+      });
+    })
+    .catch(next);
+});
 
-  //read single post
-  router.get("/read/:tag/:id/:slug_title", (req, res, next) => {
-    postModel
-    .getSiglePostAndComment(req.params.id)
-    .then(rows=>{
-      res.render("view_posts/single-post", {
-      post: rows[0],
-      tag: req.params.tag,
-      info: req.user,
-      count : rows.length,
-      comment: rows
-    },console.log(rows[0])
+//read single post
+router.get("/read/:tag/:id/:slug_title", (req, res, next) => {
+  postModel.getSiglePostAndComment(req.params.id).then(rows => {
+    res.render(
+      "view_posts/single-post",
+      {
+        post: rows[0],
+        tag: req.params.tag,
+        info: req.user,
+        count: rows.length,
+        comment: rows
+      },
+      console.log(rows[0])
     );
   });
 });
@@ -136,22 +147,28 @@ router.get("/profile", restricted, (req, res, next) => {
 //comment single post
 
 router.post("/read/:tag/:id/:slug_title", (req, res, next) => {
-
-  var entity ={
-    displayname :req.body.displayname,
-    comment_content :req.body.content,
-    comment_date :  moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-    last_update :  moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+  var entity = {
+    displayname: req.body.displayname,
+    comment_content: req.body.content,
+    comment_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+    last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
     id_post: req.params.id
   };
-console.log(entity);
-  var retUrl = req.query.retUrl || "/users/read/"+req.params.tag+"/"+req.params.id+"/"+req.params.slug_title;
-  postModel.addComment(entity)
-  .then(id=>{
-    res.redirect(retUrl)
-  })
-  .catch(next)
+  console.log(entity);
+  var retUrl =
+    req.query.retUrl ||
+    "/users/read/" +
+      req.params.tag +
+      "/" +
+      req.params.id +
+      "/" +
+      req.params.slug_title;
+  postModel
+    .addComment(entity)
+    .then(id => {
+      res.redirect(retUrl);
+    })
+    .catch(next);
 });
-
 
 module.exports = router;
