@@ -45,12 +45,12 @@ module.exports = {
   },
 
   /**
-   * @param {*} entity { CatID, CatName }
+   * @param {*} entity { id }
    */
   update: entity => {
-    var id = entity.CatID;
-    delete entity.CatID;
-    return db.update("categories", "CatID", entity, id);
+    var id = entity.id;
+    delete entity.id;
+    return db.update("post", "id", entity, id);
   },
 
   remove: id => {

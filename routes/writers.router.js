@@ -4,6 +4,7 @@ var categoryModel = require("../models/categories.model");
 var router = express.Router();
 
 router.get("/", (req, res, next) => {
+
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     postModel
       .AllPostbyId(req.user.id)
@@ -37,9 +38,23 @@ router.get("/delete/:id", (req, res, next) => {
 });
 
 router.get("/edit/:id", (req, res, next) =>{
-    res.end("page edit post id=> "+req.params.id);
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
+    categoryModel
+      .singleBy('post','id',req.params.id)
+      .then(rows => {
+        res.render("view_writers/edit", {
+          layout: "writer_layout",
+          post: rows[0],
+          category : res.locals.post_categories_mdw
+        });
+      })
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
 });
-
 
 //route này có thể đổi thành quyền admin or editor
 router.get("/backup/:id", (req, res, next) => {
@@ -140,6 +155,76 @@ router.post("/writing", (req, res, next) => {
   }
 }
 });
+
+router.post("/edit/:id", (req, res, next) => {
+  
+  var tag = new Array();
+  if(req.body.tagKT == 'on')
+  { tag.push('Kinh Tế'); }
+
+  if(req.body.tagCT == 'on')
+  { tag.push('Chính Trị'); }
+
+  if(req.body.tagXH == 'on')
+  { tag.push('Xã Hội'); }
+
+  if(req.body.tagTG == 'on')
+  { tag.push('Thế Giới'); }
+
+  if(req.body.tagCN == 'on')
+  { tag.push('Công Nghệ'); }
+
+  if(req.body.tagDA == 'on')
+  { tag.push('Điện Ảnh'); }
+
+  if(req.body.tagPL == 'on')
+  { tag.push('Pháp Luật'); }
+
+  if(req.body.tagGD == 'on')
+  { tag.push('Giáo Dục'); }
+
+  var str_tag ="";
+  if(tag.length > 0)
+  {
+    for(var i=0;i<tag.length;i++ )
+    {
+      str_tag +=tag[i];
+      if(i!=tag.length-1){
+        str_tag +="_";
+      }
+    }
+  }
+  const entity = {
+    id: req.params.id,
+    title: req.body.title,
+    slug_title: req.body.slug,
+    summary: req.body.summary,
+    id_category: req.body.category,
+    content: req.body.content,
+    id_user:res.locals.writer_mdw[0]['id_user'],
+    pseudonym:res.locals.writer_mdw[0]['pseudonym'],
+    tag : str_tag
+  };
+console.log(entity);
+  if(req.body.category == 0){
+    res.redirect("/writers/edit/"+res.params.id);
+  }
+  else{
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
+    postModel
+      .update(entity)
+      .then(id => {
+        res.redirect("/writers");
+      })
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+}
+});
+
 
 
 module.exports = router;

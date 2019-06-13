@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
   console.log(split_pathname);
 
   //nếu là trang chủ hoặc nếu là các trang /posts/?
-  if (pathname == "/" || split_pathname[1] == "posts") {
+  if (pathname == "/" || split_pathname[1] == "posts" || split_pathname[1] == "writers") {
     //thì load categories lên res.locals
     categoryModel
       .all()

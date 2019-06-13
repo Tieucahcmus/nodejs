@@ -40,6 +40,7 @@ module.exports = {
   singleBy: (Table, Field, Key) => {
     return db.load(`select * from ${Table} where ${Field} = '${Key}'`);
   },
+  
   singleByIs: (Table, Field, Key, is_delete) => {
     return db.load(
       `select * from ${Table} where ${Field} = '${Key}' and is_delete = '${is_delete}'`
