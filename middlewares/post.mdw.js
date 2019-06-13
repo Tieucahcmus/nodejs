@@ -21,13 +21,13 @@ module.exports = (req, res, next) => {
             res.locals.post_subcategories_mdw = subcategories;
             // console.log(categories);
             // console.log(subcategories);
-            next();
+            // next();
           })
           .catch(next);
       })
       .catch(next);
   } else {
     console.log("!pathname");
-    next();
   }
+  next();
 };
