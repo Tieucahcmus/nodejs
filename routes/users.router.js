@@ -120,13 +120,16 @@ router.get("/profile", restricted, (req, res, next) => {
   //read single post
   router.get("/read/:tag/:id/:slug_title", (req, res, next) => {
     postModel
-    .single(req.params.id)
+    .getSiglePostAndComment(req.params.id)
     .then(rows=>{
       res.render("view_posts/single-post", {
       post: rows[0],
       tag: req.params.tag,
-      info: req.user
-    });
+      info: req.user,
+      count : rows.length,
+      comment: rows
+    },console.log(rows[0])
+    );
   });
 });
 
@@ -136,13 +139,13 @@ router.post("/read/:tag/:id/:slug_title", (req, res, next) => {
 
   var entity ={
     displayname :req.body.displayname,
-    content :req.body.content,
+    comment_content :req.body.content,
     comment_date :  moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
     last_update :  moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
     id_post: req.params.id
   };
 console.log(entity);
-  var retUrl = req.query.retUrl || "/";
+  var retUrl = req.query.retUrl || "/users/read/"+req.params.tag+"/"+req.params.id+"/"+req.params.slug_title;
   postModel.addComment(entity)
   .then(id=>{
     res.redirect(retUrl)

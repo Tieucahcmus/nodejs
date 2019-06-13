@@ -71,6 +71,10 @@ module.exports = {
   
   addComment: entity =>{
     return db.add("comment",entity);
-  }
+  },
+
+  getSiglePostAndComment: id => {
+    return db.load(`select * from post p join comment c on p.id=c.id_post where p.id = ${id}`);
+  },
   
 };
