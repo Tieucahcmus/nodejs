@@ -54,18 +54,23 @@ module.exports = {
   },
 
   remove: id => {
-    return db.remove("post", "id", id,1);
+    return db.remove("post", "id", id , 1);
   },
 
   backup: id => {
-    return db.remove("post", "id", id,0);
+    return db.remove("post", "id", id, 0);
   },
 
   delete: id => {
-    return db.delete("categories", "CatID", id);
+    return db.delete("post", "id", id);
   },
 
   addPost: entity => {
     return db.add("post", entity);
+  },
+  
+  addComment: entity =>{
+    return db.add("comment",entity);
   }
+  
 };

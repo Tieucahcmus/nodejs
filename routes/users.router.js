@@ -3,7 +3,7 @@ var bcrypt = require("bcrypt");
 var moment = require("moment");
 var passport = require("passport");
 var userModel = require("../models/user.model");
-
+var postModel = require("../models/post.model");
 var restricted = require("../middlewares/restricted.mdw");
 
 var router = express.Router();
@@ -86,38 +86,69 @@ router.get("/login", (req, res, next) => {
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
-
     if (!user) {
       return res.render("view_users/login", {
         layout: false,
         err_message: info.message
       });
     }
-    // console.log('user router');
-    // console.log(user);
-
     var retUrl = req.query.retUrl || "/";
-    // var retUrl =  "/";
     req.logIn(user, err => {
       if (err) return next(err);
-
       return res.redirect(retUrl);
     });
   })(req, res, next);
 });
 
 router.post("/logout", restricted, (req, res, next) => {
-  // console.log("before log out");
-  // console.log(res.locals);
   req.logout();
-  // console.log("after log out");
-  // console.log(res.locals);
-  // res.redirect('/users/login');
   res.redirect("/");
 });
 
 router.get("/profile", restricted, (req, res, next) => {
-  res.render('view_users/edit-profile');
+  userModel
+      .single(req.user.id)
+      .then(rows => {
+        res.render("view_users/edit-profile", {
+          info: rows[0],
+          pseudonym: res.locals.writer_mdw[0]['pseudonym']
+        });
+      })
+      .catch(next);
+  });
+
+  //read single post
+  router.get("/read/:tag/:id/:slug_title", (req, res, next) => {
+    postModel
+    .single(req.params.id)
+    .then(rows=>{
+      res.render("view_posts/single-post", {
+      post: rows[0],
+      tag: req.params.tag,
+      info: req.user
+    });
+  });
 });
+
+//comment single post
+
+router.post("/read/:tag/:id/:slug_title", (req, res, next) => {
+
+  var entity ={
+    displayname :req.body.displayname,
+    content :req.body.content,
+    comment_date :  moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+    last_update :  moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+    id_post: req.params.id
+  };
+console.log(entity);
+  var retUrl = req.query.retUrl || "/";
+  postModel.addComment(entity)
+  .then(id=>{
+    res.redirect(retUrl)
+  })
+  .catch(next)
+});
+
 
 module.exports = router;

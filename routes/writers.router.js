@@ -2,6 +2,7 @@ var express = require("express");
 var postModel = require("../models/post.model");
 var categoryModel = require("../models/categories.model");
 var router = express.Router();
+var moment = require("moment");
 
 router.get("/", (req, res, next) => {
 
@@ -127,6 +128,11 @@ router.post("/writing", (req, res, next) => {
       }
     }
   }
+
+  if(str_tag==""){
+    str_tag="Tổng Hợp"
+  }
+
   const entity = {
     title: req.body.title,
     slug_title: req.body.slug,
@@ -135,7 +141,9 @@ router.post("/writing", (req, res, next) => {
     content: req.body.content,
     id_user: req.body.writer_id,
     pseudonym:res.locals.writer_mdw[0]['pseudonym'],
-    tag : str_tag
+    tag : str_tag,
+    post_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+    last_update : moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
   };
 
   if(req.body.category == 0){
@@ -203,7 +211,8 @@ router.post("/edit/:id", (req, res, next) => {
     content: req.body.content,
     id_user:res.locals.writer_mdw[0]['id_user'],
     pseudonym:res.locals.writer_mdw[0]['pseudonym'],
-    tag : str_tag
+    tag : str_tag,
+    last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
   };
 console.log(entity);
   if(req.body.category == 0){

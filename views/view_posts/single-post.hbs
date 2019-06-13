@@ -125,23 +125,6 @@
                                             <p>Donec turpis erat, scelerisque id euismod sit amet, fermentum vel dolor. Nulla facilisi. Sed pellen tesque lectus et accu msan aliquam. Fusce lobortis cursus quam, id mattis sapien.</p>
                                         </div>
                                     </div>
-                                    <ol class="children">
-                                        <li class="single_comment_area">
-                                            <!-- Comment Content -->
-                                            <div class="comment-content d-flex">
-                                                <!-- Comment Author -->
-                                                <div class="comment-author">
-                                                    <img src="/img/bg-img/31.jpg" alt="author">
-                                                </div>
-                                                <!-- Comment Meta -->
-                                                <div class="comment-meta">
-                                                    <a href="#" class="post-author">Sandy Doe</a>
-                                                    <a href="#" class="post-date">April 15, 2018</a>
-                                                    <p>Donec turpis erat, scelerisque id euismod sit amet, fermentum vel dolor. Nulla facilisi. Sed pellen tesque lectus et accu msan aliquam. Fusce lobortis cursus quam, id mattis sapien.</p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ol>
                                 </li>
 
                                 <!-- Single Comment Area -->
@@ -165,22 +148,26 @@
 
                         <div class="post-a-comment-area section-padding-80-0">
                             <h4>Leave a comment</h4>
-                            
                             <!-- Reply Form -->
                             <div class="contact-form-area">
                                 <form action="#" method="post">
                                     <div class="row">
-                                        <div class="col-12 col-lg-6">
-                                            <input type="text" class="form-control" id="name" placeholder="Name*">
-                                        </div>
-                                        <div class="col-12 col-lg-6">
-                                            <input type="email" class="form-control" id="email" placeholder="Email*">
+                                        {{#if authUser }}
+                                            {{#with this.info}}
+                                                <div class="col-12 col-lg-6">
+                                                    <input type="text" required name="displayname" value="{{displayname}}" class="form-control" id="displayname" placeholder="Name*">
+                                                </div>
+                                            {{/with}}
+                                        {{else}}
+                                                <div class="col-12 col-lg-6">
+                                                    <input type="text" required name="displayname" class="form-control" id="name" placeholder="Name*">
+                                                </div>
+                                        {{/if}}
+                                        <div class="col-12">
+                                            <input type="text"  class="form-control" id="subject" placeholder="Website">
                                         </div>
                                         <div class="col-12">
-                                            <input type="text" class="form-control" id="subject" placeholder="Website">
-                                        </div>
-                                        <div class="col-12">
-                                            <textarea name="message" class="form-control" id="message" cols="30" rows="10" placeholder="Message"></textarea>
+                                            <textarea  required class="form-control" name="content" id="content" cols="30" rows="10" placeholder="Message"></textarea>
                                         </div>
                                         <div class="col-12 text-center">
                                             <button class="btn newspaper-btn mt-30 w-100" type="submit">Submit Comment</button>

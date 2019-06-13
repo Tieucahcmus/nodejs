@@ -58,7 +58,7 @@ app.use(require("./middlewares/auth.mdw"));
 // ==================== ROUTES ====================
 app.get("/", (req, res, next) => {
   postModel
-      .postLimit(4)
+      .postLimit(10)
       .then(rows => {
         res.render("view_posts/home", {
           post: rows
@@ -67,16 +67,18 @@ app.get("/", (req, res, next) => {
       .catch(next);
 });
 
-app.get("/read/:tag/:id/:slug_title", (req, res, next) => {
-    postModel
-    .single(req.params.id)
-    .then(rows=>{
-      res.render("view_posts/single-post", {
-      post: rows[0],
-      tag: req.params.tag
-    });
-  });
-});
+// app.get("/read/:tag/:id/:slug_title", (req, res, next) => {
+//     postModel
+//     .single(req.params.id)
+//     .then(rows=>{
+//       res.render("view_posts/single-post", {
+//       post: rows[0],
+//       tag: req.params.tag,
+//       info: req.user
+//     });
+//   });
+// });
+
 
 app.use("/managers", require("./routes/managers.router"));
 
