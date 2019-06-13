@@ -19,8 +19,8 @@ module.exports = (req, res, next) => {
           .then(subcategories => {
             res.locals.post_categories_mdw = categories;
             res.locals.post_subcategories_mdw = subcategories;
-            console.log(categories);
-            console.log(subcategories);
+            // console.log(categories);
+            // console.log(subcategories);
             next();
           })
           .catch(next);
