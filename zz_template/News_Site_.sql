@@ -101,6 +101,18 @@ CREATE TABLE IF NOT EXISTS `News_Site`.`users` (
 ENGINE = InnoDB 
 DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
+-- -----------------------------------------------------
+-- Table `news_site`.`tag`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `news_site`.`tag` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL COMMENT 'Nhãn dán',
+  `is_delete` TINYINT(1) NULL DEFAULT 0 COMMENT '1: true - đã xoá, 0: false - chưa xoá',
+  PRIMARY KEY (`id`),
+  FULLTEXT INDEX `fts_tag` (`name`)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
 -- -----------------------------------------------------
 -- Table `News_Site`.`post`
@@ -119,7 +131,8 @@ CREATE TABLE IF NOT EXISTS `News_Site`.`post` (
   `content` LONGTEXT NOT NULL,
   `summary` TEXT NULL,
   `description` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL,
-  `tag` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL,
+  -- `tag` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL,
+  `id_tag` INT NULL DEFAULT NULL,
   `status` TINYINT(2) NOT NULL DEFAULT 4 COMMENT '1:   Đã được duyệt & chờ xuất bản\n2:   Đã xuất bản\n3:   Bị từ chối\n4:   Chưa được duyệt\n',
   `is_premium` TINYINT(1) NULL DEFAULT 0 COMMENT 'bài viết premium - dành cho user premium - 1: true, 0: false',
   -- `is_salient` TINYINT(1) NULL DEFAULT 0 COMMENT 'bài viết nổi bật - 1: true, 0: false',
@@ -128,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `News_Site`.`post` (
   INDEX `fk_id_category_idx` (`id_category` ASC) ,
   INDEX `fk_id_subcategory_idx` (`id_subcategory` ASC) ,
   INDEX `fk_id_user_idx` (`id_user` ASC) ,
-  FULLTEXT INDEX `fts_post` (`title`, `summary`, `content`, `slug_title`, `tag`) ,
+  FULLTEXT INDEX `fts_post` (`title`, `summary`, `content`, `slug_title`) ,
   CONSTRAINT `fk_post_id_category`
     FOREIGN KEY (`id_category`)
     REFERENCES `News_Site`.`category` (`id`)
@@ -143,7 +156,13 @@ CREATE TABLE IF NOT EXISTS `News_Site`.`post` (
     FOREIGN KEY (`id_user`)
     REFERENCES `News_Site`.`users` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_post_id_tag`
+    FOREIGN KEY (`id_tag`)
+    REFERENCES `News_Site`.`tag` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)  
 ENGINE = InnoDB 
 DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
