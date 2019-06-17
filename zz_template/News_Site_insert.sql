@@ -5,13 +5,13 @@ USE `News_Site` ;
 -- subcategory
 -- user_permission
 -- users
--- tag
 -- post
 -- comment
 -- post_image
 -- subscriber
 -- writer
-
+-- tag 
+-- post_tag
 -- ==================== insert ====================
 
 -- category
