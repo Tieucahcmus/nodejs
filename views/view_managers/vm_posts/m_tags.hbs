@@ -53,9 +53,16 @@
               <a class="btn btn-warning btn-sm mr-1" href="/managers/tag/edit/{{id}}" role="button" title="Edit">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </a>
+              {{#eq this.is_delete 0}}
               <a class="btn btn-danger btn-sm" href="/managers/tag/remove/{{id}}" role="button" title="Remove">
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
               </a>
+              {{/eq}}
+               {{#eq this.is_delete 1}}
+              <a class="btn btn-info btn-sm" href="/managers/tag/restore/{{id}}" role="button" title="Restore">
+                <i class="fa fa-undo" aria-hidden="true"></i>
+              </a>
+              {{/eq}}
             </td>
           </tr>
           {{/each}}

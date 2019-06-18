@@ -517,6 +517,22 @@ router.get("/tag/remove/:id", (req, res, next) => {
     .catch(next);
 });
 
+router.get("/tag/restore/:id", (req, res, next) => {
+  console.log("restore:" + req.params.id);
+  var id = req.params.id;
+  if (isNaN(id)) {
+    res.render("error", {
+      layout: false
+    });
+    return;
+  }
+  db.remove("tag", "id", +id, 0)
+    .then(res.redirect("/managers/tags"))
+    .catch(next);
+});
+
+
+
 /* #endregion */
 
 /* #region EMPLOYEES */
