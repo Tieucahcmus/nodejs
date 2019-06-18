@@ -82,7 +82,7 @@ router.get("/writing", (req, res, next) => {
             res.render("view_writers/writing", {
               layout: "writer_layout",
               category: categories,
-              tags: tags
+              tags: tags,
             });
           })
           .catch(next);

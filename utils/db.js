@@ -23,6 +23,23 @@ module.exports = {
     });
   },
 
+  loadAll: (Table) => {
+    return new Promise((resolve, reject) => {
+      var connection = createConnection();
+      connection.connect();
+      var sql = `select * from ${Table}`;
+      console.log(sql);
+      connection.query(sql, (error, results, fields) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+        connection.end();
+      });
+    });
+  },
+
   loadAllExist: (Table, is_delete) => {
     return new Promise((resolve, reject) => {
       var connection = createConnection();

@@ -50,6 +50,8 @@ app.use(express.static("public"));
 // ==================== MIDDLEWARES ====================
 require("./middlewares/session.mdw")(app);
 require("./middlewares/passport.mdw")(app);
+require('./middlewares/upload')(app);
+
 
 // require("./middlewares/upload")(app);
 app.use(require("./middlewares/post.mdw"));

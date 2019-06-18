@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="title">Slug</label>
+                <label for="title">Slug Title</label>
                 <div class="">
                     <input id="slug" required name="slug" class="form-control" type="text">
                 </div>
@@ -73,6 +73,14 @@
                     {{/each}}
                 </select>
             </div>
+
+            <div class="form-group">
+                <label for="fuMain">Photo:</label>
+                <div class="file-loading">
+                    <input id="fuMain" name="fuMain" type="file" multiple>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     Tags
@@ -89,12 +97,12 @@
                             <a class="btn btn-outline-primary"><input type="checkbox" name="tagDA" >Điện Ảnh</a>&nbsp;
                             <a class="btn btn-outline-primary"><input type="checkbox" name="tagPL" >Pháp Luật</a>&nbsp;
                             <a class="btn btn-outline-primary"><input type="checkbox" name="tagGD" >Giáo Dục</a>&nbsp; --}}
-                           
+
                             {{!-- LOAD TAGS --}}
                             {{#each tags}}
-                                <a class="btn btn-outline-primary mx-1 my-1">
-                                    <input class="" type="checkbox" name="{{id}}" > {{name}}
-                                </a>
+                            <a class="btn btn-outline-primary mx-1 my-1">
+                                <input class="" type="checkbox" name="{{id}}"> {{name}}
+                            </a>
                             {{/each}}
 
                         </div>
@@ -104,7 +112,7 @@
             <div class="form-group">
                 <label for="summary">Summary</label>
                 <div class="">
-                    <textarea id="summary" name="summary"  required class="form-control" type="text"></textarea>
+                    <textarea id="summary" name="summary" required class="form-control" type="text"></textarea>
                 </div>
             </div>
 
@@ -114,7 +122,7 @@
             </div>
         </div>
         {{#if isAuthenticated}}
-          <input type="hidden" name="writer_id" value="{{authUser.id}}">
+        <input type="hidden" name="writer_id" value="{{authUser.id}}">
         {{/if}}
         <div class="card-footer text-right">
             <button type="submit" class="btn btn-success btn-block">
@@ -124,6 +132,3 @@
         </div>
     </div>
 </form>
-
-
-
