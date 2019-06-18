@@ -1,12 +1,11 @@
 var express = require("express");
 var userModel = require("../models/user.model");
 var categoryModel = require("../models/categories.model");
-var config = require("../config/default.json");
-
+var postsModel = require("../models/post.model");
+var db = require("../utils/db");
 var router = express.Router();
 
 router.get("/", (req, res) => {
-
   //phải đăng nhập và là admin thì mới được vào trang admin
   if (res.locals.isAuthenticated && res.locals.is_admin) {
     // res.end("sb admin");
@@ -20,31 +19,7 @@ router.get("/", (req, res) => {
   }
 });
 
-router.get("/tables", (req, res) => {
-  if (res.locals.isAuthenticated && res.locals.is_admin) {
-    res.render("view_managers/vm_neat/tables", {
-      layout: "sbadmin_layout"
-    });
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-});
-
-router.get("/charts", (req, res) => {
-  if (res.locals.isAuthenticated && res.locals.is_admin) {
-    res.render("view_managers/vm_neat/charts", {
-      layout: "sbadmin_layout"
-    });
-  } else {
-    res.render("404", {
-      layout: false
-    });
-  }
-});
-
-// ==================== CATEGORIES ====================
+/* #region CATEGORIES */
 
 router.get("/categories", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {
@@ -65,14 +40,13 @@ router.get("/categories", (req, res, next) => {
   }
 });
 
-
-router.get("/categories/delete/:id", (req, res, next) => {  
-  var CatID=req.params.id;
+router.get("/categories/delete/:id", (req, res, next) => {
+  var CatID = req.params.id;
   var retUrl = req.query.retUrl || "/managers/categories";
   if (res.locals.isAuthenticated && res.locals.is_admin) {
     categoryModel
       .remove_category(CatID)
-      .then( res.redirect(retUrl) )
+      .then(res.redirect(retUrl))
       .catch(next);
   } else {
     res.render("404", {
@@ -81,12 +55,11 @@ router.get("/categories/delete/:id", (req, res, next) => {
   }
 });
 
-
-router.get("/categories/edit/:id", (req, res, next) => {  
-  var CatID=req.params.id;
+router.get("/categories/edit/:id", (req, res, next) => {
+  var CatID = req.params.id;
   if (res.locals.isAuthenticated && res.locals.is_admin) {
     categoryModel
-      .singleBy('category','id',CatID)
+      .singleBy("category", "id", CatID)
       .then(rows => {
         console.log(rows);
         res.render("view_managers/vm_categories/edit_category", {
@@ -103,20 +76,17 @@ router.get("/categories/edit/:id", (req, res, next) => {
   }
 });
 
-
-router.post("/categories/edit/:id", (req, res, next) => {  
+router.post("/categories/edit/:id", (req, res, next) => {
   var entity = {
-    id : req.body.id,
+    id: req.body.id,
     name: req.body.cat_name,
     slug_name: req.body.slug_name,
-    is_delete : +req.body.is_delete
+    is_delete: +req.body.is_delete
   };
   if (res.locals.isAuthenticated && res.locals.is_admin) {
     categoryModel
       .update(entity)
-      .then(
-        res.redirect('/managers/categories')
-        )
+      .then(res.redirect("/managers/categories"))
       .catch(next);
   } else {
     res.render("404", {
@@ -124,7 +94,6 @@ router.post("/categories/edit/:id", (req, res, next) => {
     });
   }
 });
-
 
 router.get("/category/add", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {
@@ -174,7 +143,7 @@ router.get("/category/name-is-available", (req, res, next) => {
   var name = req.query.exist_name;
   console.log("category/name-is-available");
   console.log(name);
-  categoryModel.singleByIs("category", "name", name,0).then(rows => {
+  categoryModel.singleByIs("category", "name", name, 0).then(rows => {
     if (rows.length > 0) {
       console.log("false");
       res.json(false);
@@ -189,7 +158,7 @@ router.get("/category/slug_name-is-available", (req, res, next) => {
   var slug_name = req.query.exist_slug_name;
   console.log("category/slug_name-is-available");
   console.log(slug_name);
-  categoryModel.singleByIs("category", "slug_name", slug_name,0).then(rows => {
+  categoryModel.singleByIs("category", "slug_name", slug_name, 0).then(rows => {
     if (rows.length > 0) {
       console.log("false");
       res.json(false);
@@ -199,8 +168,9 @@ router.get("/category/slug_name-is-available", (req, res, next) => {
     }
   });
 });
+/* #endregion */
 
-// ==================== SUBCATEGORIES ====================
+/* #region SUBCATEGORIES */
 
 router.get("/subcategories1", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {
@@ -271,7 +241,6 @@ router.post("/subcategory1/add", (req, res, next) => {
       layout: false
     });
   }
-
 });
 
 router.get("/subcategory1/subname-is-available", (req, res, next) => {
@@ -297,8 +266,9 @@ router.get("/subcategory1/slug_name-is-available", (req, res, next) => {
     }
   });
 });
+/* #endregion */
 
-// ==================== ORTHERS ====================
+/* #region USERS */
 
 router.get("/user_permission", (req, res) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {
@@ -330,6 +300,10 @@ router.get("/users", (req, res, next) => {
   }
   // res.end("managers/users")
 });
+
+/* #endregion */
+
+/* #region POSTS */
 
 router.get("/posts", (req, res) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {
@@ -367,6 +341,186 @@ router.get("/post_images", (req, res) => {
   // res.render("categories-post");
 });
 
+router.get("/tags", (req, res, next) => {
+  console.log("managers/tags");
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    postsModel
+      .allTags()
+      .then(rows => {
+        console.log(rows);
+        res.render("view_managers/vm_posts/m_tags", {
+          layout: "sbadmin_layout",
+          tags: rows
+        });
+      })
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+
+  // res.render("categories-post");
+});
+
+router.get("/tag/add", (req, res, next) => {
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    res.render("view_managers/vm_posts/m_tags_add", {
+      layout: "sbadmin_layout"
+    });
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+router.get("/tag/name-is-available", (req, res, next) => {
+  var name = req.query.exist_name;
+  console.log("tag/name-is-available: " + name);
+  // console.log(name);
+  db.loadByExist("tag", "name", name, 0).then(rows => {
+    if (rows.length > 0) {
+      console.log("tag/name-is-available: false");
+      res.json(false);
+    } else {
+      console.log("tag/name-is-available: true");
+      res.json(true);
+    }
+  });
+});
+
+router.get("/tag/slug_name-is-available", (req, res, next) => {
+  var slug_name = req.query.exist_slug_name;
+  console.log("tag/slug_name-is-available");
+  console.log(slug_name);
+  db.loadByExist("tag", "slug_name", slug_name, 0).then(rows => {
+    if (rows.length > 0) {
+      console.log("false");
+      res.json(false);
+    } else {
+      console.log("true");
+      res.json(true);
+    }
+  });
+});
+
+router.post("/tag/add", (req, res, next) => {
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    console.log("post/tag/add");
+    console.log(req.body);
+
+    var entity = {
+      name: req.body.tagname
+      // slug_name: req.body.slug_name
+    };
+
+    console.log(entity);
+
+    // kiểm tra tồn tại (kiểm tra lần cuối trước khi thêm để tránh trùng, dù giao diện đã kiểm tra)
+    db.loadByExist("tag", "name", entity.name, 0)
+      .then(rows => {
+        console.log("tag/add loadByExist:" + rows.length);
+        //nếu tồn tại
+        if (rows.length > 0) {
+          res.render("view_managers/vm_posts/m_tags_add", {
+            layout: "sbadmin_layout",
+            is_sesuccessful: false,
+            is_sesuccessful_name: entity.name
+          });
+        }
+        //nếu chưa tồn tại thì thêm
+        else {
+          db.add("tag", entity)
+            .then(id => {
+              console.log(id + " - " + entity.name);
+              res.render("view_managers/vm_posts/m_tags_add", {
+                layout: "sbadmin_layout",
+                is_sesuccessful: true,
+                is_sesuccessful_name: entity.name
+              });
+            })
+            .catch(next);
+        }
+      })
+      .catch(next);
+  }
+  //render view 404
+  else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+router.get("/tag/edit/:id", (req, res, next) => {
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    var ID = req.params.id;
+    db.loadBy("tag", "id", ID)
+      .then(rows => {
+        console.log(rows);
+        res.render("view_managers/vm_posts/m_tags_edit", {
+          layout: "sbadmin_layout",
+          tag: rows[0],
+          id: ID
+        });
+      })
+      .catch(next);
+  }
+  //render view 404
+  else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+router.post("/tag/edit/:id", (req, res, next) => {
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    var id = req.body.id;
+    if (isNaN(id)) {
+      res.render("error", {
+        layout: false
+      });
+      return;
+    }
+    var entity = {
+      name: req.body.tagname
+      // is_delete: +req.body.is_delete
+    };
+
+    console.log(entity);
+
+    db.update("tag", "id", entity, +id)
+      .then(res.redirect("/managers/tags"))
+      .catch(next);
+  }
+  //render view 404
+  else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+router.get("/tag/remove/:id", (req, res, next) => {
+  // console.log(req.body);
+  var id = req.params.id;
+  if (isNaN(id)) {
+    res.render("error", {
+      layout: false
+    });
+    return;
+  }
+  db.remove("tag", "id", +id, 1)
+    .then(res.redirect("/managers/tags"))
+    .catch(next);
+});
+
+/* #endregion */
+
+/* #region EMPLOYEES */
+
 router.get("/subscribers", (req, res) => {
   if (res.locals.isAuthenticated && res.locals.is_admin) {
     res.end("managers/subscribers");
@@ -398,5 +552,34 @@ router.get("/writers", (req, res, next) => {
 
   // res.render("categories-post");
 });
+
+/* #endregion */
+
+/* #region ORTHERS */
+
+router.get("/tables", (req, res) => {
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    res.render("view_managers/vm_neat/tables", {
+      layout: "sbadmin_layout"
+    });
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+router.get("/charts", (req, res) => {
+  if (res.locals.isAuthenticated && res.locals.is_admin) {
+    res.render("view_managers/vm_neat/charts", {
+      layout: "sbadmin_layout"
+    });
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+/* #endregion */
 
 module.exports = router;

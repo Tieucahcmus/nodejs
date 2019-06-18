@@ -1,13 +1,51 @@
-var mysql = require('mysql');
-var config = require('../config/default.json');
+var mysql = require("mysql");
+var config = require("../config/default.json");
 
-var createConnection = () => mysql.createConnection(config['mysql']);
+var createConnection = () => mysql.createConnection(config["mysql"]);
+
+// cột is_delete trong các bảng, để xác định đã xoá hay không xoá
+// 1: true - đã xoá, 0: false - chưa xoá
+var __is_delete__ = "is_delete";
 
 module.exports = {
   load: sql => {
     return new Promise((resolve, reject) => {
       var connection = createConnection();
       connection.connect();
+      connection.query(sql, (error, results, fields) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+        connection.end();
+      });
+    });
+  },
+
+  loadBy: (Table, Field, Key) => {
+    return new Promise((resolve, reject) => {
+      var connection = createConnection();
+      connection.connect();
+      var sql = `select * from ${Table} where ${Field} = '${Key}'`;
+      console.log(sql);
+      connection.query(sql, (error, results, fields) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+        connection.end();
+      });
+    });
+  },
+
+  loadByExist: (Table, Field, Key, is_delete) => {
+    return new Promise((resolve, reject) => {
+      var connection = createConnection();
+      connection.connect();
+      var sql = `select * from ${Table} where ${Field} = '${Key}' and ${__is_delete__} = '${is_delete}'`;
+      console.log("sql: " + sql);
       connection.query(sql, (error, results, fields) => {
         if (error) {
           reject(error);
@@ -68,10 +106,10 @@ module.exports = {
   },
 
   //update isDelete = 1
-  remove: (tableName, idField, id,status) => {
+  remove: (tableName, idField, id, status) => {
     return new Promise((resolve, reject) => {
       var connection = createConnection();
-      var is_deleteField = 'is_delete'
+      var is_deleteField = "is_delete";
       var sql = `update ${tableName} set ${is_deleteField} = ${status} where ${idField} = ?`;
       connection.connect();
       connection.query(sql, id, (error, results, fields) => {
@@ -83,7 +121,7 @@ module.exports = {
         connection.end();
       });
     });
-  },
+  }
 
   // load tuần tự, không như promise
   // load_sequentially: (sql, fn) => {

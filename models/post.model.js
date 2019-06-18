@@ -2,15 +2,20 @@ var db = require("../utils/db");
 
 var __TB_Post__ = "post";
 var __IDField__ = "id";
+var __TB_Tag__ = "tag";
 var __where_Field__ = "username";
 
 module.exports = {
   all: () => {
     return db.load(`select * from  ${__TB_Post__}`);
   },
-  
-  postLimit: (n) => {
+
+  postLimit: n => {
     return db.load(`select * from  ${__TB_Post__} limit ${n}`);
+  },
+
+  allTags: () => {
+    return db.load(`select * from  ${__TB_Tag__}`);
   },
 
   allWithDetails: () => {
@@ -25,6 +30,16 @@ module.exports = {
     return db.load(`select * from ${__TB_Post__} where ${__IDField__} = ${id}`);
   },
 
+  singleBy: (Field, Key) => {
+    return db.load(`select * from ${__TB_Post__} where ${Field} = ${Key}`);
+  },
+
+  singleByExist: (Field, Key, is_delete) => {
+    return db.load(
+      `select * from ${__TB_Post__} where ${Field} = ${Key} and is_delete =  ${is_delete}`
+    );
+  },
+
   single_writer: id_user => {
     return db.load(`
     select w.*
@@ -33,9 +48,7 @@ module.exports = {
   },
 
   AllPostbyId: id => {
-    return db.load(
-      `select * from ${__TB_Post__} where id_user = ${id}`
-    );
+    return db.load(`select * from ${__TB_Post__} where id_user = ${id}`);
   },
   /**
    * @param {*} entity { CatName: ... }
@@ -54,7 +67,7 @@ module.exports = {
   },
 
   remove: id => {
-    return db.remove("post", "id", id , 1);
+    return db.remove("post", "id", id, 1);
   },
 
   backup: id => {
@@ -68,13 +81,14 @@ module.exports = {
   addPost: entity => {
     return db.add("post", entity);
   },
-  
-  addComment: entity =>{
-    return db.add("comment",entity);
+
+  addComment: entity => {
+    return db.add("comment", entity);
   },
 
   getSiglePostAndComment: id => {
-    return db.load(`select * from post p join comment c on p.id=c.id_post where p.id = ${id}`);
-  },
-  
+    return db.load(
+      `select * from post p join comment c on p.id=c.id_post where p.id = ${id}`
+    );
+  }
 };

@@ -230,6 +230,7 @@ DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 CREATE TABLE IF NOT EXISTS `news_site`.`tag` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL COMMENT 'Nhãn dán',
+  -- `slug_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL COMMENT 'tên không dấu',
   `is_delete` TINYINT(1) NULL DEFAULT 0 COMMENT '1: true - đã xoá, 0: false - chưa xoá',
   PRIMARY KEY (`id`),
   FULLTEXT INDEX `fts_tag` (`name`)
