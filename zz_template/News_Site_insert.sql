@@ -98,21 +98,21 @@ INSERT INTO `subscriber` VALUES (1,'2019-06-09 21:40:36',4);
 INSERT INTO `news_site`.`writer` (`pseudonym`, `id_user`) VALUES ('Sakura', '3');
 
 -- tag 
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Esports',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Game Online',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Manga/Film',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('PC/Conslole',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Liên Minh Huyền Thoại',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Gaming Gear',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Chính Trị',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Xã Hội',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Thế Giới',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Vũ Trụ',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Công Nghệ',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Điện Ảnh',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Pháp Luật',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('Giáo Dục',0);
-INSERT INTO `tag` (`name`,`is_delete`) VALUES ('LCK',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Esports',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Game Online',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Manga/Film',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('PC/Conslole',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Liên Minh Huyền Thoại',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Gaming Gear',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Chính Trị',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Xã Hội',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Thế Giới',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Vũ Trụ',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Công Nghệ',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Điện Ảnh',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Pháp Luật',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Giáo Dục',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('LCK',0);
 
 
 

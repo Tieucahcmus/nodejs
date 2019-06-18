@@ -341,6 +341,10 @@ router.get("/post_images", (req, res) => {
   // res.render("categories-post");
 });
 
+/* #endregion */
+
+/* #region TAGS */
+
 router.get("/tags", (req, res, next) => {
   console.log("managers/tags");
   if (res.locals.isAuthenticated && res.locals.is_admin) {
@@ -530,8 +534,6 @@ router.get("/tag/restore/:id", (req, res, next) => {
     .then(res.redirect("/managers/tags"))
     .catch(next);
 });
-
-
 
 /* #endregion */
 
