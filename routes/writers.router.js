@@ -3,6 +3,7 @@ var postModel = require("../models/post.model");
 var categoryModel = require("../models/categories.model");
 var router = express.Router();
 var moment = require("moment");
+var db = require("../utils/db");
 
 router.get("/", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
@@ -75,11 +76,16 @@ router.get("/writing", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     categoryModel
       .all()
-      .then(rows => {
-        res.render("view_writers/writing", {
-          layout: "writer_layout",
-          category: rows
-        });
+      .then(categories => {
+        db.loadAllExist("tag", 0)
+          .then(tags => {
+            res.render("view_writers/writing", {
+              layout: "writer_layout",
+              category: categories,
+              tags: tags
+            });
+          })
+          .catch(next);
       })
       .catch(next);
   } else {

@@ -23,6 +23,24 @@ module.exports = {
     });
   },
 
+  loadAllExist: (Table, is_delete) => {
+    return new Promise((resolve, reject) => {
+      var connection = createConnection();
+      connection.connect();
+      var is_deleteField = "is_delete";
+      var sql = `select * from ${Table} where ${is_deleteField} = '${is_delete}'`;
+      console.log(sql);
+      connection.query(sql, (error, results, fields) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+        connection.end();
+      });
+    });
+  },
+
   loadBy: (Table, Field, Key) => {
     return new Promise((resolve, reject) => {
       var connection = createConnection();
@@ -44,7 +62,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var connection = createConnection();
       connection.connect();
-      var sql = `select * from ${Table} where ${Field} = '${Key}' and ${__is_delete__} = '${is_delete}'`;
+      var is_deleteField = "is_delete";
+      var sql = `select * from ${Table} where ${Field} = '${Key}' and ${is_deleteField} = '${is_delete}'`;
       console.log("sql: " + sql);
       connection.query(sql, (error, results, fields) => {
         if (error) {
