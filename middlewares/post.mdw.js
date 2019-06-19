@@ -4,12 +4,17 @@ module.exports = (req, res, next) => {
   console.log("req.post.mdw");
   // console.log(url.parse(req.url));
   pathname = url.parse(req.url).pathname;
-  var split_pathname = pathname.split("/");
+  var segment = pathname.split("/");
   console.log(pathname);
-  console.log(split_pathname);
+  console.log(segment);
 
   //nếu là trang chủ hoặc nếu là các trang /posts/?
-  if (pathname == "/" || split_pathname[1] == "posts" || split_pathname[1] == "writers") {
+  if (
+    pathname == "/" ||
+    segment[1] == "posts" ||
+    segment[1] == "writers" ||
+    (segment[1] == "managers" && segment[2] == "subcategory1")
+  ) {
     //thì load categories lên res.locals
     categoryModel
       .all()

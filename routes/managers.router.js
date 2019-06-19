@@ -222,23 +222,45 @@ router.post("/subcategory1/add", (req, res, next) => {
     };
     console.log(entity);
 
-    if (entity.id_category >= 0) {
-      categoryModel
-        .add_Table(entity)
-        .then(id => {
+    // kiểm tra tồn tại (kiểm tra lần cuối trước khi thêm để tránh trùng, dù giao diện đã kiểm tra)
+    db.loadByExist("subcategory", "name", entity.name, 0)
+      .then(rows => {
+        //nếu đã tồn tại
+        if (rows.length > 0) {
+            console.log("subcategory/add: " + entity.name + " đã tồn tại");
           res.render("view_managers/vm_categories/m_subcategory1_add", {
             layout: "sbadmin_layout",
-            is_sesuccessful: true
+            //is_sesuccessful: true,
+            //is_sesuccessful_name: entity.name
           });
-        })
-        .catch(next);
-    } else {
-      res.render("view_managers/vm_categories/m_subcategory1_add", {
-        layout: "sbadmin_layout",
-        is_failure: true
-      });
-    }
-  } else {
+        }
+        //nếu chưa tồn tại
+        else {
+          if (entity.id_category >= 0) {
+            categoryModel
+              .add_Table(entity)
+              .then(id => {
+                res.render("view_managers/vm_categories/m_subcategory1_add", {
+                  layout: "sbadmin_layout",
+                  categories: res.locals.post_categories_mdw,
+                  is_sesuccessful: true,
+                  is_sesuccessful_name: entity.name
+                });
+              })
+              .catch(next);
+          } //
+          else {
+            res.render("view_managers/vm_categories/m_subcategory1_add", {
+              layout: "sbadmin_layout",
+              categories: res.locals.post_categories_mdw,
+              is_failure: true
+            });
+          }
+        }
+      })
+      .catch(next);
+  } //
+  else {
     res.render("404", {
       layout: false
     });
@@ -431,8 +453,8 @@ router.post("/tag/add", (req, res, next) => {
         if (rows.length > 0) {
           res.render("view_managers/vm_posts/m_tags_add", {
             layout: "sbadmin_layout",
-            is_sesuccessful: false,
-            is_sesuccessful_name: entity.name
+            is_sesuccessful: false
+            //is_sesuccessful_name: entity.name
           });
         }
         //nếu chưa tồn tại thì thêm

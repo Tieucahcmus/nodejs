@@ -46,7 +46,7 @@ module.exports = {
       connection.connect();
       var is_deleteField = "is_delete";
       var sql = `select * from ${Table} where ${is_deleteField} = '${is_delete}'`;
-      console.log(sql);
+      console.log("loadByExist sql: " + sql);
       connection.query(sql, (error, results, fields) => {
         if (error) {
           reject(error);
@@ -81,7 +81,7 @@ module.exports = {
       connection.connect();
       var is_deleteField = "is_delete";
       var sql = `select * from ${Table} where ${Field} = '${Key}' and ${is_deleteField} = '${is_delete}'`;
-      console.log("sql: " + sql);
+      console.log("loadByExist sql: " + sql);
       connection.query(sql, (error, results, fields) => {
         if (error) {
           reject(error);
