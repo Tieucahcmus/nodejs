@@ -168,6 +168,7 @@ router.get("/category/slug_name-is-available", (req, res, next) => {
     }
   });
 });
+
 /* #endregion */
 
 /* #region SUBCATEGORIES */

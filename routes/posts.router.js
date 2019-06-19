@@ -71,11 +71,6 @@ router.get("/:slug_name", (req, res, next) => {
 
   postModel.singleBy(id).then(rows => {
     if (rows.length > 0) {
-      // console.log("post.router rows");
-      // console.log(rows);
-      // console.log("post.router rows[0]");
-      // console.log(rows[0]);
-      // console.log(rows[0].content);
 
       res.render("view_posts/single-post_publish", {
         error: false,

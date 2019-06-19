@@ -7,8 +7,10 @@ module.exports = (req, res, next) => {
     // console.log(res.locals.authUser);
     if (+res.locals.authUser.id_permission === 1) {
       res.locals.is_admin = true;
+      next();
     } else if (+res.locals.authUser.id_permission === 2) {
       res.locals.is_editor = true;
+      next();
     } else if (+res.locals.authUser.id_permission === 3) {
       res.locals.is_writer = true;
 
@@ -16,21 +18,20 @@ module.exports = (req, res, next) => {
         .single_writer(req.user.id)
         .then(writer => {
           res.locals.writer_mdw = writer;
-          // console.log(writer);
-          // next();
+          //console.log("mdw :" );
+          //console.log(res.locals.writer_mdw);
+          next();
         })
         .catch(next);
 
-      // categoryModel
-      // .all()
-      // .then(rows => {
-      //   res.locals.category_mdw = rows;
-      //   next();
-      // })
-      // .catch(next);
     } else if (+res.locals.authUser.id_permission === 4) {
       res.locals.is_subcriber = true;
+      next();
     }
   }
-  next();
+  else
+  {
+     next();
+  }
+ 
 };

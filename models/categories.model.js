@@ -43,6 +43,14 @@ module.exports = {
       `select * from ${Table} where ${Field} = '${Key}' and is_delete = '${is_delete}'`
     );
   },
+
+  isSubcategoryDependentCategory: (id, id_category) => {
+    return db.load(
+      `select * from ${__TB_SubCategory__} where id = '${id}' and id_category = '${id_category}'`
+    );
+  },
+
+
   /**
    * @param {*} entity { CatName: ... }
    */

@@ -66,6 +66,7 @@ router.post("/register", (req, res, next) => {
       userModel
         .addSubscriber(Subscriber)
         .then(idUser => {
+          console.log(Subscriber);
           res.redirect("/users/login");
         })
         .catch(next);
