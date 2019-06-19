@@ -113,15 +113,25 @@ router.get("/writing/subcat-is-available", (req, res, next) => {
 
   console.log("/writing/subcat-is-available");
   console.log(id_cat + " - " + id_subcat);
-  categoryModel.isSubcategoryDependentCategory(id_subcat, id_cat).then(rows => {
-    if (rows.length <= 0) {
-      console.log("false");
-      res.json(false);
-    } else {
-      console.log("true");
-      res.json(true);
-    }
-  });
+
+  //subcategory có thể null
+  if (id_subcat == 0) {
+    console.log("true");
+    res.json(true);
+  } //
+  else {
+    categoryModel
+      .isSubcategoryDependentCategory(id_subcat, id_cat)
+      .then(rows => {
+        if (rows.length <= 0) {
+          console.log("false");
+          res.json(false);
+        } else {
+          console.log("true");
+          res.json(true);
+        }
+      });
+  }
 });
 
 router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
@@ -180,7 +190,7 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
 
     // console.log(req.files);
     // console.log(req.body);
-    //phải theo đúng thứ tự trong bảng 
+    //phải theo đúng thứ tự trong bảng
     var entity = {
       title: req.body.title,
       slug_title: req.body.slug,
@@ -192,7 +202,7 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
       id_category: req.body.category,
       id_subcategory: req.body.subcategory,
       content: req.body.content,
-      summary: req.body.summary,
+      summary: req.body.summary
     };
 
     console.log(entity);
@@ -202,6 +212,10 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
       .isSubcategoryDependentCategory(entity.id_subcategory, entity.id_category)
       .then(rows => {
         if (rows.length >= 0) {
+
+           //kiểm tra slug_title để ko thêm trùng (bước kiểm tra cuối cùng)
+           //tránh tình trạng vì 1 lý do nào đó ấn post nhiều lần
+            
           //add post
           postModel
             .addPost(entity)

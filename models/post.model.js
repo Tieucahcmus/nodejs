@@ -31,12 +31,12 @@ module.exports = {
   },
 
   singleBy: (Field, Key) => {
-    return db.load(`select * from ${__TB_Post__} where ${Field} = ${Key}`);
+    return db.load(`select * from ${__TB_Post__} where ${Field} = '${Key}'`);
   },
 
   singleByExist: (Field, Key, is_delete) => {
     return db.load(
-      `select * from ${__TB_Post__} where ${Field} = ${Key} and is_delete =  ${is_delete}`
+      `select * from ${__TB_Post__} where ${Field} = '${Key}' and is_delete =  ${is_delete}`
     );
   },
 
