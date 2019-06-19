@@ -154,7 +154,8 @@ DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 CREATE TABLE IF NOT EXISTS `News_Site`.`comment` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `displayname` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL,
-  `content` TEXT NOT NULL,
+  -- `content` TEXT NOT NULL,
+  `comment_content` TEXT NOT NULL,
   `comment_date` DATETIME NOT NULL,
   `last_update` DATETIME NULL,
   `id_post` INT NOT NULL,
