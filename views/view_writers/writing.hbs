@@ -8,23 +8,87 @@
 <script src="/plugins/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/plugins/tinymce/js/tinymce/themes/silver/theme.min.js"></script>
 <script src="/js/wysiwyg/fileinput.min.js"></script>
-
+<script src="/js/jquery/jquery.validate.min.js"></script>
+<script src="/js/moment.min.js"></script>
 <script src="/mfunctions/functions.js"></script>
 <script>
     $(function () {
 
-        $('#fuMain').fileinput({
-            theme: 'fa',
-            dropZoneEnabled: false,
-            allowedFileExtensions: ['png', 'jpg', 'gif'],
-            uploadClass: 'btn btn-success',
-            uploadAsync: false,
-            showCaption: true,
-            showPreview: true,
-            showRemove: true,
-            showUpload: false, // <------ just set this from true to false
-            showCancel: true,
-            showUploadedThumbs: true,
+        $('#frmPost').validate({
+            onkeyup: false,
+            rules: {
+
+                title: {
+                    required: true
+                },
+                slug: {
+                    required: true
+                },
+
+                category: {
+                    required: true,
+                },
+
+                subcategory: {
+                    required: true,
+                    remote: {
+                        url: '/writers/writing/subcat-is-available',
+                        data: {
+                            id_cat: function () {
+                                return $('#category').val();
+                            },
+                            id_subcat: function () {
+                                return $('#subcategory').val();
+                            }
+                        }
+                    }
+                },
+
+            },
+
+            messages: {
+                title: {
+                    required: 'This field is required.',
+                },
+
+                slug: {
+                    required: 'This field is required.',
+                },
+
+                category: {
+                    required: 'This field is required.',
+                },
+
+                subcategory: {
+                    required: 'This field is required.',
+                    remote: 'Choose correct sub category'
+                },
+            },
+
+        errorElement: 'small',
+        errorClass: 'help-block text-danger',
+        validClass: 'is-valid',
+        highlight: function (e) {
+            $(e).removeClass('is-valid').addClass('is-invalid');
+        },
+        unhighlight: function (e) {
+            $(e).removeClass('is-invalid').addClass('is-valid');
+        },
+        });
+
+    $('#fuMain').fileinput({
+        theme: 'fa',
+        dropZoneEnabled: false,
+        allowedFileExtensions: ['png', 'jpg', 'gif'],
+        uploadClass: 'btn btn-success',
+        maxFileCount: 2,
+        uploadAsync: false,
+        showCaption: true,
+        showPreview: true,
+        showRemove: true,
+        showUpload: false, // <------ just set this from true to false
+        showCancel: true,
+        showUploadedThumbs: true,
             {{!-- uploadUrl: '/upload', --}}
         });
 
@@ -47,13 +111,17 @@
             });
         }
     });
+
+
+
     })
 
 </script>
 
 {{/section}}
 
-<form action="" method="POST" enctype="multipart/form-data">
+{{!-- enctype="multipart/form-data" --}}
+<form novalidate id="frmPost" action="" method="POST" enctype="multipart/form-data">
     <div class="card shadow">
         <h5 class="card-header">
             New Post
@@ -62,35 +130,25 @@
             <div class="form-group">
                 <label for="title">Title</label>
                 <div class="">
-                    <input id="title" name="title" required class="form-control" onkeyup="ChangeToSlug();" type="text">
+                    <input id="title" name="title" class="form-control" onkeyup="ChangeToSlug();" type="text">
                 </div>
             </div>
             <div class="form-group">
-                <label for="title">Slug Title</label>
+                <label for="slug">Slug Title</label>
                 <div class="">
-                    <input id="slug" required name="slug" class="form-control" type="text">
+                    <input id="slug" name="slug" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
-                <select name="category" class="form-control" onchange="ChangeCatList(this)">
-                    <option value="0">--</option>
+                <select id="category" name="category" class="form-control">
+                    <option value="">--</option>
                     {{#each this.categories}}
                     <option value="{{id}}">{{name}}</option>
                     {{/each}}
                 </select>
             </div>
 
-            <script>
-                // Hàm xử lý khi thẻ select thay đổi giá trị được chọn
-                // obj là tham số truyền vào
-                // và cũng chính là thẻ select
-                function ChangeCatList(obj) {
-
-                    //alert(obj.value);
-                    //return obj.value;
-                }
-            </script>
             <div class="form-group">
                 <label for="category">Sub Category</label>
                 <select id="subcategory" name="subcategory" class="form-control">
@@ -98,7 +156,7 @@
                     {{#each this.subcategories}}
                     {{#each ../categories}}
                     {{#eq ../id_category id}}
-                    <option value="{{id}}"> Cat: {{name}} -- Sub: {{../name}}
+                    <option value="{{../id}}"> Cat: {{id}}/{{name}} -- Sub: {{../id}}/{{../name}}
                     </option>
                     {{/eq}}
                     {{/each}}
