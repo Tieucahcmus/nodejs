@@ -142,7 +142,7 @@ module.exports = {
   },
 
   //update isDelete = 1
-  remove: (tableName, idField, id, status) => {
+  is_delete: (tableName, idField, id, status) => {
     return new Promise((resolve, reject) => {
       var connection = createConnection();
       var is_deleteField = "is_delete";

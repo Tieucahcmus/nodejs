@@ -67,11 +67,11 @@ module.exports = {
   },
 
   remove: id => {
-    return db.remove("post", "id", id, 1);
+    return db.is_delete("post", "id", id, 1);
   },
 
   backup: id => {
-    return db.remove("post", "id", id, 0);
+    return db.is_delete("post", "id", id, 0);
   },
 
   delete: id => {

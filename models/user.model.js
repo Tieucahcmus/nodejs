@@ -53,7 +53,7 @@ module.exports = {
 
   //update isDelete = 1
   remove: id => {
-    return db.remove(__TB_Users__, __IDField__, id);
+    return db.is_delete(__TB_Users__, __IDField__, id,1);
   },
 
   delete: id => {

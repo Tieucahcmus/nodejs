@@ -120,9 +120,8 @@
                                             </div>
                                             <!-- Comment Meta -->
                                             <div class="comment-meta">
-                                                <a href="#" class="post-author">{{displayname}}</a>
-                                                <h4><a href="#" class="post-date">{{comment_date}}</a></h4>
-                                                <h2><p>{{comment_content}}</p></h2>
+                                                <h4>{{displayname}}</h4> <h8>{{comment_date}}</h8>
+                                                <h6>{{comment_content}}</h2>
                                             </div>
                                         </div>
                                     </li>
@@ -140,7 +139,7 @@
                                         {{#if authUser }}
                                             {{#with this.info}}
                                                 <div class="col-12 col-lg-12">
-                                                    <input type="text" required name="displayname" value="{{displayname}}" class="form-control" id="displayname" placeholder="Name*">
+                                                    <input type="text" required readonly name="displayname" value="{{displayname}}" class="form-control" id="displayname" placeholder="Name*">
                                                 </div>
                                             {{/with}}
                                         {{else}}
