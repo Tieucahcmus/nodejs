@@ -120,12 +120,17 @@
 
 {{/section}}
 
+<<<<<<< HEAD
 {{!-- enctype="multipart/form-data" --}}
 <form novalidate id="frmPost" action="" method="POST" enctype="multipart/form-data">
+=======
+<form action="" method="POST">
+>>>>>>> 4d3eeb8df18716d504a1d3595e14df66b96ce5fb
     <div class="card shadow">
         <h5 class="card-header">
             New Post
         </h5>
+            <input hidden name="writer_name" value="{{this.writer}}">
         <div class="card-body">
             <div class="form-group">
                 <label for="title">Title</label>
