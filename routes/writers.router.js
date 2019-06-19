@@ -77,13 +77,19 @@ router.get("/writing", (req, res, next) => {
     categoryModel
       .all()
       .then(categories => {
-        db.loadAllExist("tag", 0)
-          .then(tags => {
-            res.render("view_writers/writing", {
-              layout: "writer_layout",
-              category: categories,
-              tags: tags,
-            });
+        categoryModel
+          .allSubCategory1()
+          .then(subcategories => {
+            db.loadAllExist("tag", 0)
+              .then(tags => {
+                res.render("view_writers/writing", {
+                  layout: "writer_layout",
+                  categories: categories,
+                  subcategories: subcategories,
+                  tags: tags
+                });
+              })
+              .catch(next);
           })
           .catch(next);
       })
@@ -96,82 +102,85 @@ router.get("/writing", (req, res, next) => {
 });
 
 router.post("/writing", (req, res, next) => {
-  var tag = new Array();
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
+    /* #region  old */
 
-  if (req.body.tagKT == "on") {
-    tag.push("Kinh Tế");
-  }
+    var tag = new Array();
 
-  if (req.body.tagCT == "on") {
-    tag.push("Chính Trị");
-  }
+    if (req.body.tagKT == "on") {
+      tag.push("Kinh Tế");
+    }
 
-  if (req.body.tagXH == "on") {
-    tag.push("Xã Hội");
-  }
+    if (req.body.tagCT == "on") {
+      tag.push("Chính Trị");
+    }
 
-  if (req.body.tagTG == "on") {
-    tag.push("Thế Giới");
-  }
+    if (req.body.tagXH == "on") {
+      tag.push("Xã Hội");
+    }
 
-  if (req.body.tagCN == "on") {
-    tag.push("Công Nghệ");
-  }
+    if (req.body.tagTG == "on") {
+      tag.push("Thế Giới");
+    }
 
-  if (req.body.tagDA == "on") {
-    tag.push("Điện Ảnh");
-  }
+    if (req.body.tagCN == "on") {
+      tag.push("Công Nghệ");
+    }
 
-  if (req.body.tagPL == "on") {
-    tag.push("Pháp Luật");
-  }
+    if (req.body.tagDA == "on") {
+      tag.push("Điện Ảnh");
+    }
 
-  if (req.body.tagGD == "on") {
-    tag.push("Giáo Dục");
-  }
+    if (req.body.tagPL == "on") {
+      tag.push("Pháp Luật");
+    }
 
-  var str_tag = "";
-  if (tag.length > 0) {
-    for (var i = 0; i < tag.length; i++) {
-      str_tag += tag[i];
-      if (i != tag.length - 1) {
-        str_tag += "_";
+    if (req.body.tagGD == "on") {
+      tag.push("Giáo Dục");
+    }
+
+    var str_tag = "";
+    if (tag.length > 0) {
+      for (var i = 0; i < tag.length; i++) {
+        str_tag += tag[i];
+        if (i != tag.length - 1) {
+          str_tag += "_";
+        }
       }
     }
-  }
 
-  if (str_tag == "") {
-    str_tag = "Tổng Hợp";
-  }
+    if (str_tag == "") {
+      str_tag = "Tổng Hợp";
+    }
 
-  const entity = {
-    title: req.body.title,
-    slug_title: req.body.slug,
-    summary: req.body.summary,
-    id_category: req.body.category,
-    content: req.body.content,
-    id_user: req.body.writer_id,
-    pseudonym: res.locals.writer_mdw[0]["pseudonym"],
-    tag: str_tag,
-    post_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-    last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
-  };
+    /* #endregion */
 
-  if (req.body.category == 0) {
-    res.redirect("/writers");
-  } else {
-    if (res.locals.isAuthenticated && res.locals.is_writer) {
+    var entity = {
+      title: req.body.title,
+      slug_title: req.body.slug,
+      summary: req.body.summary,
+      id_category: req.body.category,
+      content: req.body.content,
+      id_user: req.body.writer_id,
+      pseudonym: res.locals.writer_mdw[0]["pseudonym"],
+      post_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
+    };
+
+    if (req.body.category == 0) {
+      res.redirect("/writers");
+    } else {
       postModel
         .addPost(entity)
         .then(id => {
           res.redirect("/writers");
         })
         .catch(next);
-    } else {
-      res.render("404", {
-        layout: false
-      });
     }
+  } else {
+    res.render("404", {
+      layout: false
+    });
   }
 });
 

@@ -220,7 +220,9 @@ router.post("/subcategory1/add", (req, res, next) => {
       slug_name: req.body.slug_name,
       id_category: +req.body.chooseCat
     };
-    if (id_category >= 0) {
+    console.log(entity);
+
+    if (entity.id_category >= 0) {
       categoryModel
         .add_Table(entity)
         .then(id => {

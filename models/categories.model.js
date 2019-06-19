@@ -10,10 +10,7 @@ module.exports = {
     return db.load(`select * from  ${__TB_Category__}`);
   },
 
-  //load tuần tự
-  all_sequentially: fn => {
-    return db.load_sequentially(`select * from  ${__TB_Category__}`, fn);
-  },
+
   allSubCategory1: () => {
     return db.load(`select * from  ${__TB_SubCategory__}`);
   },

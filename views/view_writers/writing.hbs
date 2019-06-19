@@ -18,35 +18,42 @@
             dropZoneEnabled: false,
             allowedFileExtensions: ['png', 'jpg', 'gif'],
             uploadClass: 'btn btn-success',
-            uploadUrl: '/upload',
             uploadAsync: false,
+            showCaption: true,
+            showPreview: true,
+            showRemove: true,
+            showUpload: false, // <------ just set this from true to false
+            showCancel: true,
+            showUploadedThumbs: true,
+            {{!-- uploadUrl: '/upload', --}}
         });
 
-        tinymce.init({
-            selector: "#content",
-            menubar: false,
-            height: 600,
-            plugins: 'paste image link autolink lists table media',
-            toolbar: [
-                'undo redo | bold italic underline strikethrough | numlist bullist | alignleft aligncenter alignright',
-                'forecolor backcolor',
-                'table link image media',
-                // 'paste'
-            ],
-            image_caption: true,
-            entity_encoding: "raw",
-            setup: function (editor) {
-                editor.on('change', function () {
-                    editor.save();
-                });
-            }
-        });
+    tinymce.init({
+        selector: "#content",
+        menubar: false,
+        height: 600,
+        plugins: 'paste image link autolink lists table media',
+        toolbar: [
+            'undo redo | bold italic underline strikethrough | numlist bullist | alignleft aligncenter alignright',
+            'forecolor backcolor',
+            'table link image media',
+            // 'paste'
+        ],
+        image_caption: true,
+        entity_encoding: "raw",
+        setup: function (editor) {
+            editor.on('change', function () {
+                editor.save();
+            });
+        }
+    });
     })
+
 </script>
 
 {{/section}}
 
-<form action="" method="POST">
+<form action="" method="POST" enctype="multipart/form-data">
     <div class="card shadow">
         <h5 class="card-header">
             New Post
@@ -66,13 +73,39 @@
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
-                <select name="category" class="form-control">
+                <select name="category" class="form-control" onchange="ChangeCatList(this)">
                     <option value="0">--</option>
-                    {{#each this.category}}
+                    {{#each this.categories}}
                     <option value="{{id}}">{{name}}</option>
                     {{/each}}
                 </select>
             </div>
+
+            <script>
+                // Hàm xử lý khi thẻ select thay đổi giá trị được chọn
+                // obj là tham số truyền vào
+                // và cũng chính là thẻ select
+                function ChangeCatList(obj) {
+
+                    //alert(obj.value);
+                    //return obj.value;
+                }
+            </script>
+            <div class="form-group">
+                <label for="category">Sub Category</label>
+                <select id="subcategory" name="subcategory" class="form-control">
+                    <option value="0">--</option>
+                    {{#each this.subcategories}}
+                    {{#each ../categories}}
+                    {{#eq ../id_category id}}
+                    <option value="{{id}}"> Cat: {{name}} -- Sub: {{../name}}
+                    </option>
+                    {{/eq}}
+                    {{/each}}
+                    {{/each}}
+                </select>
+            </div>
+
 
             <div class="form-group">
                 <label for="fuMain">Photo:</label>
