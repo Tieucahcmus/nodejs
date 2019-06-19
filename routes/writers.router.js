@@ -4,6 +4,21 @@ var categoryModel = require("../models/categories.model");
 var router = express.Router();
 var moment = require("moment");
 var db = require("../utils/db");
+var multer = require("multer");
+
+var storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "./public/img/post/uploads");
+  },
+
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+var upload = multer({
+  storage: storage
+});
 
 router.get("/", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
@@ -74,92 +89,103 @@ router.get("/backup/:id", (req, res, next) => {
 
 router.get("/writing", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-    categoryModel
-      .all()
-      .then(categories => {
-        categoryModel
-          .allSubCategory1()
-          .then(subcategories => {
-            db.loadAllExist("tag", 0)
-              .then(tags => {
-                res.render("view_writers/writing", {
-                  layout: "writer_layout",
-                  categories: categories,
-                  subcategories: subcategories,
-                  tags: tags
-                });
-              })
-              .catch(next);
-          })
-          .catch(next);
+    db.loadAllExist("tag", 0)
+      .then(tags => {
+        res.render("view_writers/writing", {
+          layout: "writer_layout",
+          categories: res.locals.post_categories_mdw,
+          subcategories: res.locals.post_subcategories_mdw,
+          tags: tags
+        });
       })
       .catch(next);
-  } else {
+  } //
+  else {
     res.render("404", {
       layout: false
     });
   }
 });
 
-router.post("/writing", (req, res, next) => {
+router.get("/writing/subcat-is-available", (req, res, next) => {
+  var id_cat = req.query.id_cat;
+  var id_subcat = req.query.id_subcat;
+
+  console.log("/writing/subcat-is-available");
+  console.log(id_cat + " - " + id_subcat);
+  categoryModel.isSubcategoryDependentCategory(id_subcat, id_cat).then(rows => {
+    if (rows.length <= 0) {
+      console.log("false");
+      res.json(false);
+    } else {
+      console.log("true");
+      res.json(true);
+    }
+  });
+});
+
+router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     /* #region  old */
 
-    var tag = new Array();
+    // var tag = new Array();
 
-    if (req.body.tagKT == "on") {
-      tag.push("Kinh Tế");
-    }
+    // if (req.body.tagKT == "on") {
+    //   tag.push("Kinh Tế");
+    // }
 
-    if (req.body.tagCT == "on") {
-      tag.push("Chính Trị");
-    }
+    // if (req.body.tagCT == "on") {
+    //   tag.push("Chính Trị");
+    // }
 
-    if (req.body.tagXH == "on") {
-      tag.push("Xã Hội");
-    }
+    // if (req.body.tagXH == "on") {
+    //   tag.push("Xã Hội");
+    // }
 
-    if (req.body.tagTG == "on") {
-      tag.push("Thế Giới");
-    }
+    // if (req.body.tagTG == "on") {
+    //   tag.push("Thế Giới");
+    // }
 
-    if (req.body.tagCN == "on") {
-      tag.push("Công Nghệ");
-    }
+    // if (req.body.tagCN == "on") {
+    //   tag.push("Công Nghệ");
+    // }
 
-    if (req.body.tagDA == "on") {
-      tag.push("Điện Ảnh");
-    }
+    // if (req.body.tagDA == "on") {
+    //   tag.push("Điện Ảnh");
+    // }
 
-    if (req.body.tagPL == "on") {
-      tag.push("Pháp Luật");
-    }
+    // if (req.body.tagPL == "on") {
+    //   tag.push("Pháp Luật");
+    // }
 
-    if (req.body.tagGD == "on") {
-      tag.push("Giáo Dục");
-    }
+    // if (req.body.tagGD == "on") {
+    //   tag.push("Giáo Dục");
+    // }
 
-    var str_tag = "";
-    if (tag.length > 0) {
-      for (var i = 0; i < tag.length; i++) {
-        str_tag += tag[i];
-        if (i != tag.length - 1) {
-          str_tag += "_";
-        }
-      }
-    }
+    // var str_tag = "";
+    // if (tag.length > 0) {
+    //   for (var i = 0; i < tag.length; i++) {
+    //     str_tag += tag[i];
+    //     if (i != tag.length - 1) {
+    //       str_tag += "_";
+    //     }
+    //   }
+    // }
 
-    if (str_tag == "") {
-      str_tag = "Tổng Hợp";
-    }
+    // if (str_tag == "") {
+    //   str_tag = "Tổng Hợp";
+    // }
 
     /* #endregion */
 
+    // console.log(req.files);
+    //console.log(req.body);
     var entity = {
       title: req.body.title,
       slug_title: req.body.slug,
       summary: req.body.summary,
       id_category: req.body.category,
+      id_subcategory: req.body.subcategory,
       content: req.body.content,
       id_user: req.body.writer_id,
       pseudonym: res.locals.writer_mdw[0]["pseudonym"],
@@ -167,17 +193,41 @@ router.post("/writing", (req, res, next) => {
       last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
     };
 
-    if (req.body.category == 0) {
-      res.redirect("/writers");
-    } else {
-      postModel
-        .addPost(entity)
-        .then(id => {
-          res.redirect("/writers");
-        })
-        .catch(next);
-    }
-  } else {
+    console.log(entity);
+    //kiểm tra id_category của subcategory có hợp lệ với category
+    //vì trên giao diện chưa fix đc
+    categoryModel
+      .isSubcategoryDependentCategory(entity.id_subcategory, entity.id_category)
+      .then(rows => {
+        if (rows.length <= 0) {
+          res.end("ok");
+        } else {
+          db.loadAllExist("tag", 0)
+            .then(tags => {
+              res.render("view_writers/writing", {
+                layout: "writer_layout",
+                categories: res.locals.post_categories_mdw,
+                subcategories: res.locals.post_subcategories_mdw,
+                tags: tags
+              });
+            })
+            .catch(next);
+        }
+      })
+      .catch(next);
+
+    // if (req.body.category == 0) {
+    //   res.redirect("/writers");
+    // } else {
+    //   postModel
+    //     .addPost(entity)
+    //     .then(id => {
+    //       res.redirect("/writers");
+    //     })
+    //     .catch(next);
+    // }
+  } //
+  else {
     res.render("404", {
       layout: false
     });
