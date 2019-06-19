@@ -6,7 +6,6 @@
           </li>
           <li class="breadcrumb-item active">Overview</li>
         </ol>
-
         <!-- Icon Cards-->
         <div class="row">
           <div class="col-xl-3 col-sm-6 mb-3">
@@ -93,7 +92,7 @@
             POST MANAGER</div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <table class="table table-bordered" id="" width="100%" cellspacing="0">
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -180,6 +179,15 @@
                   </tr>
                 </tbody>
               </table>
+              <nav>
+                <ul class="pagination">
+                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                  {{#each this.page_numbers}}
+                  <li class="page-item"><a class="page-link" href="#">{{value}}</a></li>
+                  {{/each}}
+                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
             </div>
           </div>
           <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>

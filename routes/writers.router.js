@@ -4,16 +4,34 @@ var categoryModel = require("../models/categories.model");
 var router = express.Router();
 var moment = require("moment");
 var db = require("../utils/db");
-
+var config = require('../config/default.json');
 router.get("/", (req, res, next) => {
+  var limit = config.paginate.default;
+  var page = req.query.page || 1;
+  if (page < 1) page = 1;
+  var start_offset = (page - 1) * limit;
+
   if (res.locals.isAuthenticated && res.locals.is_writer) {
+    var id=req.user.id;
+    if(id == null){redirect("/")}
+   
     postModel
-      .AllPostbyId(req.user.id)
-      .then(rows => {
+    .AllPostbyId(id)
+      .then((rows) => {
+        var total = 0;
+        if(rows !=null){total=rows.length}
+
+        var nPages = Math.floor(total / limit);
+        if (total % limit > 0) nPages++;
+
+        var page_numbers = [];
+        for (i = 1; i <= nPages; i++) {
+          page_numbers.push({value: i}) }
         res.render("view_writers/index", {
           layout: "writer_layout",
           post: rows,
-          count: rows.length
+          count: total,
+          page_numbers
         });
       })
       .catch(next);
@@ -74,25 +92,21 @@ router.get("/backup/:id", (req, res, next) => {
 
 router.get("/writing", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-    categoryModel
-      .all()
-      .then(categories => {
-        categoryModel
-          .allSubCategory1()
-          .then(subcategories => {
-            db.loadAllExist("tag", 0)
-              .then(tags => {
+    Promise.all([
+      categoryModel.all(),
+      postModel.single_writer(req.user.id),
+      categoryModel.allSubCategory1(),
+      db.loadAllExist("tag", 0)
+    ])
+      .then(([categories,writer,subcategories,tags]) => {
                 res.render("view_writers/writing", {
                   layout: "writer_layout",
                   categories: categories,
                   subcategories: subcategories,
-                  tags: tags
+                  tags: tags,
+                  writer:writer[0]['pseudonym']
                 });
-              })
-              .catch(next);
-          })
-          .catch(next);
-      })
+           })
       .catch(next);
   } else {
     res.render("404", {
@@ -103,44 +117,24 @@ router.get("/writing", (req, res, next) => {
 
 router.post("/writing", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-    /* #region  old */
+    var Tags = new Array();
 
-    var tag = new Array();
+    db.loadAll('tag')
+    .then(_tags=>{
+      for(var i=0;i<_tags.length;i++)
+      {
+        var tag_temp = _tags[i]['id'];
+        console.log(i+"=>"+tag_temp)
+        if(req.body.tag_temp == 'on'){
+          Tags.push(tag_temp);
+        }
+      }
+    });
 
-    if (req.body.tagKT == "on") {
-      tag.push("Kinh Tế");
-    }
-
-    if (req.body.tagCT == "on") {
-      tag.push("Chính Trị");
-    }
-
-    if (req.body.tagXH == "on") {
-      tag.push("Xã Hội");
-    }
-
-    if (req.body.tagTG == "on") {
-      tag.push("Thế Giới");
-    }
-
-    if (req.body.tagCN == "on") {
-      tag.push("Công Nghệ");
-    }
-
-    if (req.body.tagDA == "on") {
-      tag.push("Điện Ảnh");
-    }
-
-    if (req.body.tagPL == "on") {
-      tag.push("Pháp Luật");
-    }
-
-    if (req.body.tagGD == "on") {
-      tag.push("Giáo Dục");
-    }
-
+    console.log("Tags =>");
+    console.log(Tags);
     var str_tag = "";
-    if (tag.length > 0) {
+    if (Tags.length > 0) {
       for (var i = 0; i < tag.length; i++) {
         str_tag += tag[i];
         if (i != tag.length - 1) {
@@ -153,8 +147,6 @@ router.post("/writing", (req, res, next) => {
       str_tag = "Tổng Hợp";
     }
 
-    /* #endregion */
-
     var entity = {
       title: req.body.title,
       slug_title: req.body.slug,
@@ -162,10 +154,12 @@ router.post("/writing", (req, res, next) => {
       id_category: req.body.category,
       content: req.body.content,
       id_user: req.body.writer_id,
-      pseudonym: res.locals.writer_mdw[0]["pseudonym"],
+      pseudonym: req.body.writer_name,
       post_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
       last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
     };
+
+    console.log(entity);
 
     if (req.body.category == 0) {
       res.redirect("/writers");
