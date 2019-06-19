@@ -29,17 +29,17 @@
                                                 <li><a href="#">{{tag}}</a></li>
                                             </ul>
                                         </div>
-
+                                        {{/with}}
                                         <!-- Post Like & Post Comment -->
                                         <div class="d-flex align-items-center post-like--comments">
                                             <a href="#" class="post-like"><img src="/img/core-img/like.png" alt=""> <span>392</span></a>
-                                        <a href="#" class="post-comment"><img src="/img/core-img/chat.png" alt=""> <span>10</span></a>
+                                        <a href="#" class="post-comment"><img src="/img/core-img/chat.png" alt=""> <span>{{this.count}}</span></a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{/with}}
+                        
                         <!-- About Author -->
                         <div class="blog-post-author d-flex">
                             <div class="author-thumbnail">
@@ -106,25 +106,27 @@
 
                         <!-- Comment Area Start -->
                         <div class="comment_area clearfix">
-                           <h5 class="title">{{this.count}} Comments</h5>
+                           <h5 class="title">Comments ({{this.count}})</h5>
                             <ol>
                                 {{#each this.comment}}
-                                <!-- Single Comment Area -->
-                                <li class="single_comment_area">
-                                    <!-- Comment Content -->
-                                    <div class="comment-content d-flex">
-                                        <!-- Comment Author -->
-                                        <div class="comment-author">
-                                            <img src="/img/bg-img/30.jpg" alt="author">
+                                    {{#compare is_delete "===" 0}}
+                                    <!-- Single Comment Area -->
+                                    <li class="single_comment_area">
+                                        <!-- Comment Content -->
+                                        <div class="comment-content d-flex">
+                                            <!-- Comment Author -->
+                                            <div class="comment-author">
+                                                <img src="/img/bg-img/30.jpg" alt="author">
+                                            </div>
+                                            <!-- Comment Meta -->
+                                            <div class="comment-meta">
+                                                <a href="#" class="post-author">{{displayname}}</a>
+                                                <h4><a href="#" class="post-date">{{comment_date}}</a></h4>
+                                                <h2><p>{{comment_content}}</p></h2>
+                                            </div>
                                         </div>
-                                        <!-- Comment Meta -->
-                                        <div class="comment-meta">
-                                            <a href="#" class="post-author">{{displayname}}</a>
-                                            <h4><a href="#" class="post-date">{{comment_date}}</a></h4>
-                                            <h2><p>{{comment_content}}</p></h2>
-                                        </div>
-                                    </div>
-                                </li>
+                                    </li>
+                                    {{/compare}}
                                 {{/each}}
                             </ol>
                         </div>

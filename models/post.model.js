@@ -11,7 +11,7 @@ module.exports = {
   },
 
   postLimit: n => {
-    return db.load(`select * from  ${__TB_Post__} limit ${n}`);
+    return db.load(`select * from  ${__TB_Post__} where is_delete = 0 and status = 2 limit ${n}`);
   },
 
   allTags: () => {
