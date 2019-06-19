@@ -179,18 +179,20 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
     /* #endregion */
 
     // console.log(req.files);
-    //console.log(req.body);
+    // console.log(req.body);
+    //phải theo đúng thứ tự trong bảng 
     var entity = {
       title: req.body.title,
       slug_title: req.body.slug,
-      summary: req.body.summary,
+      post_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      id_user: req.body.writer_id,
+      pseudonym: res.locals.writer_mdw[0]["pseudonym"],
+      views: 0,
       id_category: req.body.category,
       id_subcategory: req.body.subcategory,
       content: req.body.content,
-      id_user: req.body.writer_id,
-      pseudonym: res.locals.writer_mdw[0]["pseudonym"],
-      post_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-      last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
+      summary: req.body.summary,
     };
 
     console.log(entity);
@@ -199,9 +201,28 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
     categoryModel
       .isSubcategoryDependentCategory(entity.id_subcategory, entity.id_category)
       .then(rows => {
-        if (rows.length <= 0) {
-          res.end("ok");
-        } else {
+        if (rows.length >= 0) {
+          //add post
+          postModel
+            .addPost(entity)
+            .then(rows => {
+              //add post_tag
+
+              //render lại trang writing
+              db.loadAllExist("tag", 0)
+                .then(tags => {
+                  res.render("view_writers/writing", {
+                    layout: "writer_layout",
+                    categories: res.locals.post_categories_mdw,
+                    subcategories: res.locals.post_subcategories_mdw,
+                    tags: tags
+                  });
+                })
+                .catch(next);
+            })
+            .catch(next);
+        } //
+        else {
           db.loadAllExist("tag", 0)
             .then(tags => {
               res.render("view_writers/writing", {
