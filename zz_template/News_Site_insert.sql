@@ -15,28 +15,28 @@ USE `News_Site` ;
 -- ==================== insert ====================
 
 -- category
-INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Esports', 'esports');
-INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Game Online','game-online');
-INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Manga/Film','manga-film');
-INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('PC/Conslole','pc-conslole');
+INSERT INTO `news_site`.`category` (`id`, `name`, `slug_name`) VALUES (1, 'Esports', 'esports');
+INSERT INTO `news_site`.`category` (`id`, `name`, `slug_name`) VALUES (2, 'Game Online','game-online');
+INSERT INTO `news_site`.`category` (`id`, `name`, `slug_name`) VALUES (3, 'Manga/Film','manga-film');
+INSERT INTO `news_site`.`category` (`id`, `name`, `slug_name`) VALUES (4, 'PC/Conslole','pc-conslole');
 -- INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Khám Phá','Khám Phá');
 -- INSERT INTO `news_site`.`category` ( `name`, `slug_name`) VALUES ('Mobile','mobile');
 
 
 -- subcategory
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Liên Minh Huyền Thoại', 'lien-minh-huyen-thoai', '1');
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('DOTA 2', 'dota-2', '1');
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Liên Minh Huyền Thoại', 'lien-minh-huyen-thoai', 1);
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('DOTA 2', 'dota-2', 1);
 
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('FIFA Online 4', 'fifa-online-4', '2');
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('PUBG', 'pubg', '2');
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('FIFA Online 4', 'fifa-online-4', 2);
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('PUBG', 'pubg', 2);
 
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Naruto', 'naruto', '3');
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('One Piece', 'one-piece', '3');
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Marvel', 'marvel', '3');
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Dragon Ball', 'dragon-ball', '3');
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Naruto', 'naruto', 3);
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('One Piece', 'one-piece', 3);
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Marvel', 'marvel', 3);
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Dragon Ball', 'dragon-ball', 3);
 
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Gaming Gear', 'gaming-gear', '4');
-INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Đồ Chơi Số', 'do-choi-so', '4');
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Gaming Gear', 'gaming-gear', 4);
+INSERT INTO `news_site`.`subcategory` (`name`, `slug_name`, `id_category`) VALUES ('Đồ Chơi Số', 'do-choi-so', 4);
 
 -- user_permission
 INSERT INTO `news_site`.`user_permission` (`id`, `key`, `id_delete`) VALUES ('1', 'admin', '0');
@@ -107,10 +107,12 @@ một trong những tác động lớn nhất dẫn đến sự thất
 
 
 -- subscriber
-INSERT INTO `subscriber` VALUES (1,'2019-06-09 21:40:36',4);
+INSERT INTO `news_site`.`subscriber` (`expiration_date`,`id_user`) VALUES ('2019-06-09 21:40:36',5);
+INSERT INTO `news_site`.`subscriber` (`expiration_date`,`id_user`) VALUES ('2019-06-26 16:44:29',6);
 
 -- writer
 INSERT INTO `news_site`.`writer` (`pseudonym`, `id_user`) VALUES ('Sakura', '3');
+INSERT INTO `news_site`.`writer` (`pseudonym`, `id_user`) VALUES ('Hashirama', '4');
 
 -- tag 
 INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Esports',0);
@@ -128,8 +130,21 @@ INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Điện Ảnh',0);
 INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Pháp Luật',0);
 INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Giáo Dục',0);
 INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('LCK',0);
-
-
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('DOTA 2',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('FIFA Online 4',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('PUBG',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Naruto',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('One Piece',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('FIFA Online 4',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Marvel',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Dragon Ball',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Đồ Chơi Số',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Final Fantasy VII',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Xbox',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('PUBG Mobile',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('LPL',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('VCS',0);
+INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('LCS',0);
 
 -- post_tag
 
