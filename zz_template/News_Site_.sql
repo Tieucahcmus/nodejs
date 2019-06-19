@@ -175,7 +175,8 @@ DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 CREATE TABLE IF NOT EXISTS `News_Site`.`post_image` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `id_post` INT NOT NULL,
-  `description` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL,
+  -- `description` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL,
+  `name` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL,
   `is_delete` TINYINT(1) NULL DEFAULT 0 COMMENT '1: true - đã xoá, 0: false - chưa xoá',
   PRIMARY KEY (`id`),
   INDEX `fk_id_post_idx` (`id_post` ASC) ,
