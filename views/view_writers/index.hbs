@@ -119,13 +119,18 @@
                     <td>{{post_date}}</td>
                     <td>{{last_update}}</td>
                     <td>{{tag}}</td>
-                    <td>
+                    <td style="width: 15%">
                       {{#compare status "===" 4}}
-                        <a class="btn btn-danger form-control">Refuse</a>&nbsp;
-                      {{else}}
-                          {{#compare status "===" 2}}
-                            <a class="btn btn-primary form-control">Posted</a>&nbsp;
-                          {{/compare}}
+                        <a class="btn btn-warning form-control" >WaitApproval</a>&nbsp;
+                      {{/compare}}
+                       {{#compare status "===" 3}}
+                        <a class="btn btn-danger form-control">Cancel</a>&nbsp;
+                      {{/compare}}
+                      {{#compare status "===" 2}}
+                        <a class="btn btn-success form-control">Posted</a>&nbsp;
+                      {{/compare}}
+                      {{#compare status "===" 1}}
+                        <a class="btn btn-outline-primary form-control">Loading</a>&nbsp;
                       {{/compare}}
                     </td>
                       {{#compare status "===" 4}}
@@ -139,12 +144,38 @@
                                <a class="btn btn-primary form-control" href="/writers/backup/{{id}}">Backup</a>
                             </td>
                           {{/compare}}
-                      {{else}}
-                      <td>
-                        
-                      </td>
-                      {{/compare}}
+                     {{/compare}}
 
+                     {{#compare status "===" 3}}
+                          {{#compare is_delete "===" 0 }}
+                            <td>
+                                <a class="btn btn-primary form-control"  href="/writers/edit/{{id}}"><i class="fa fa-pencil"></i></a> &nbsp;
+                                <a class="btn btn-danger form-control"  href="/writers/delete/{{id}}"><i class="fa fa-trash"></i></a>
+                            </td>
+                            {{else}}
+                            <td>
+                               <a class="btn btn-primary form-control" href="/writers/backup/{{id}}">Backup</a>
+                            </td>
+                          {{/compare}}
+                     {{/compare}}
+                     {{#compare status "===" 2}}
+                          {{#compare is_delete "===" 0 }}
+                            <td></td>
+                            {{else}}
+                            <td>
+                               <a class="btn btn-primary form-control" href="/writers/backup/{{id}}">Backup</a>
+                            </td>
+                          {{/compare}}
+                     {{/compare}}
+                      {{#compare status "===" 1}}
+                          {{#compare is_delete "===" 0 }}
+                            <td></td>
+                            {{else}}
+                            <td>
+                               <a class="btn btn-primary form-control" href="/writers/backup/{{id}}">Backup</a>
+                            </td>
+                          {{/compare}}
+                     {{/compare}}
                     {{/each}}
                   </tr>
                 </tbody>

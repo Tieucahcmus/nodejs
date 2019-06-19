@@ -71,6 +71,6 @@ module.exports = {
   },
 
   remove_category: id => {
-    return db.remove("category", "id", id);
+    return db.is_delete("category", "id", id,1);
   }
 };

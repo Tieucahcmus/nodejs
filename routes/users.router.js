@@ -120,8 +120,8 @@ router.get("/profile", restricted, (req, res, next) => {
     .single(req.user.id)
     .then(rows => {
       res.render("view_users/edit-profile", {
-        info: rows[0],
-        pseudonym: res.locals.writer_mdw[0]["pseudonym"]
+        info: rows[0]
+        // ,pseudonym: res.locals.writer_mdw[0]["pseudonym"]
       });
     })
     .catch(next);
