@@ -100,7 +100,7 @@ router.get("/menu/:slug_title", (req, res, next) => {
   }
 
   db.load(
-    `select category.slug_name , post.* 
+    `select category.name as 'catname', category.slug_name , post.* 
       from post join category on post.id_category = category.id
       where category.slug_name = '${slug_title}' and category.is_delete = 0 and post.is_delete = 0`
   ).then(rows => {
@@ -128,7 +128,7 @@ router.get("/menu/:slug_title", (req, res, next) => {
 router.get("/tag/:tagname", (req, res, next) => {
   
   
-  //res.render("home");
+  res.render("home");
 });
 
 //chỗ này sẽ hiển thị các bài báo sau khi search

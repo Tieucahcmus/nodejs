@@ -353,66 +353,152 @@ INSERT INTO `news_site`.`writer` (`pseudonym`, `id_user`) VALUES ('Sakura', '3')
 INSERT INTO `news_site`.`writer` (`pseudonym`, `id_user`) VALUES ('Hashirama', '4');
 
 -- tag 
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Esports',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Game Online',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Manga/Film',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('PC/Conslole',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Liên Minh Huyền Thoại',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Gaming Gear',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Chính Trị',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Xã Hội',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Thế Giới',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Vũ Trụ',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Công Nghệ',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Điện Ảnh',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Pháp Luật',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Giáo Dục',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('LCK',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('DOTA 2',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('FIFA Online 4',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('PUBG',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Naruto',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('One Piece',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('FIFA Online 4',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Marvel',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Dragon Ball',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Đồ Chơi Số',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Final Fantasy VII',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('Xbox',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('PUBG Mobile',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('LPL',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('VCS',0);
-INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('LCS',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (1, 'Esports',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (2, 'Game Online',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (3, 'Manga/Film',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (4, 'PC/Conslole',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (5, 'Liên Minh Huyền Thoại',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (6, 'Gaming Gear',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (7, 'Chính Trị',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (8, 'Xã Hội',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (9, 'Thế Giới',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (10, 'Vũ Trụ',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (11, 'Công Nghệ',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (12, 'Điện Ảnh',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (13, 'Pháp Luật',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (14, 'Giáo Dục',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (15, 'DOTA 2',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (16, 'PUBG Mobile',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (17, 'PUBG',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (18, 'Naruto',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (19, 'One Piece',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (20, 'FIFA Online 4',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (21, 'Marvel',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (22, 'Dragon Ball',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (23, 'Xbox',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (24, 'Final Fantasy VII',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (25, 'Đồ Chơi Số',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (26, 'LPL',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (27, 'LCK',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (28, 'VCS',0);
+INSERT INTO `news_site`.`tag` (`id`,`name`,`is_delete`) VALUES (29, 'LCS',0);
 
 -- post_tag
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1, 5);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1, 27);
 
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (2, 5);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (2, 1);
 
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (3, 5);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (3, 27);
 
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (4, 5);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (4, 27);
 
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (5, 5);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (5, 27);
 
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (6, 1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (6, 15);
 
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (7, 1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (7, 15);
 
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (8, 1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (8, 15);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (8, 5);
 
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (9,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (9,15);
 
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
-INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (10, 1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (10, 15);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (11, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (11, 20);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (12, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (12, 20);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (13, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (13, 20);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (14, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (14, 20);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (15, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (15, 20);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (16, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (16, 16);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (17, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (17, 17);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (18, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (18, 16);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (19, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (19,17);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (20, 2);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (20, 17);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (21, 3);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (21, 18);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (22, 3);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (22, 18);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (23, 3);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (23, 19);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (24, 3);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (24, 19);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (25, 3);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (25, 20);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (26, 3);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (26, 20);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (27, 3);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (27, 21);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (28, 3);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (28, 21);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (29, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (29, 6);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (30, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (30, 6);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (31, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (31, 6);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (32, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (32, 6);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (33, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (33, 6);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (34, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (34, 25);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (35, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (35, 25);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (36, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (36, 25);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (37, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (37, 25);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (38, 4);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (38, 25);
+
+
 
 
