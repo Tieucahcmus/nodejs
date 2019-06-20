@@ -7,11 +7,6 @@
 
                     <!-- Single Featured Post -->
                     <div class="single-blog-post featured-post single-post">
-
-                        <!-- Title Image-->
-                        <div>
-                        </div>
-
                         <!-- Title -->
                         <div>
                             <h1>
@@ -19,17 +14,18 @@
                             </h1>
                         </div>
 
+                        <!-- Title Image-->
+                        <div>
+                            <div class="post-thumb">
+                                <a href="#"><img src="/img/bg-img/25.jpg" alt=""></a>
+                            </div>
+                        </div>
+                        <hr />
                         <!-- Pseudonym & Date Created-->
                         <div>
-                            By:
-
-                            <strong class="text-danger">
-
-                                {{post_publish.pseudonym}}
-                            </strong>
+                            By:<strong class="text-danger"> {{post_publish.pseudonym}} </strong>
                             | {{post_publish.post_date}}
                         </div>
-
                         <!-- Content -->
                         <div>
                             {{{post_publish.content}}}
