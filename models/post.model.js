@@ -10,6 +10,10 @@ module.exports = {
     return db.load(`select * from  ${__TB_Post__}`);
   },
 
+  countPostWithStt: (Field,key,id) => {
+    return db.load(`select count(*) from post where ${Field} = ${key} and id_user = ${id}`);
+  },
+
   postLimit: n => {
     return db.load(`select * from  ${__TB_Post__} where is_delete = 0 and status = 2 limit ${n}`);
   },
@@ -29,9 +33,11 @@ module.exports = {
   single: id => {
     return db.load(`select * from ${__TB_Post__} where ${__IDField__} = ${id}`);
   },
+
   getComment: id => {
     return db.load(`select * from comment where id_post = ${id}`);
   },
+
   singleBy: (Field, Key) => {
     return db.load(`select * from ${__TB_Post__} where ${Field} = '${Key}'`);
   },
