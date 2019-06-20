@@ -167,16 +167,23 @@ router.post("/profile", restricted, (req, res, next) => {
 router.post("/changes_password", restricted, (req, res, next) => {
   if (res.locals.isAuthenticated) {
     var saltRounds = 12;
-    var hash = bcrypt.hashSync(req.body.new_pass, saltRounds);
+    var check = bcrypt.compareSync(req.body.old_pass, req.user.password)   // true
+    var newPass=bcrypt.hashSync(req.body.new_pass, saltRounds);
+    console.log("check=>"+check);
     var entity = {
       id: req.user.id,
-      password : hash
+      password : newPass
     }
-    userModel.update(entity)
-    .then(id=>{
-        res.redirect("/");
-    })
-    .catch(next);
+    if(check == true){
+      userModel.update(entity)
+      .then(id=>{
+          res.redirect("/");
+      })
+      .catch(next);
+    }else
+    {
+      res.redirect('/users/profile');
+    }
   }else
   {
     res.render("404", {
