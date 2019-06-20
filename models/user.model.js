@@ -46,8 +46,8 @@ module.exports = {
   },
 
   update: entity => {
-    var id = entity.f_ID;
-    delete entity.f_ID;
+    var id = entity.id;
+    delete entity.id;
     return db.update(__TB_Users__, __IDField__, entity, id);
   },
 

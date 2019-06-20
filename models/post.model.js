@@ -29,7 +29,9 @@ module.exports = {
   single: id => {
     return db.load(`select * from ${__TB_Post__} where ${__IDField__} = ${id}`);
   },
-
+  getComment: id => {
+    return db.load(`select * from comment where id_post = ${id}`);
+  },
   singleBy: (Field, Key) => {
     return db.load(`select * from ${__TB_Post__} where ${Field} = '${Key}'`);
   },
@@ -46,10 +48,6 @@ module.exports = {
     from users u join writer w on u.id = w.id_user
     where u.id = ${id_user}`);
   },
-
-  // AllPostbyId: id => {
-  //   return db.load(`select * from ${__TB_Post__} where id_user = ${id}`);
-  // },
 
   pageById: (id, start_offset) => {
     var lim = config.paginate.default;
@@ -91,9 +89,7 @@ module.exports = {
     return db.add("comment", entity);
   },
 
-  getSiglePostAndComment: id => {
-    return db.load(
-      `select * from post p join comment c on p.id=c.id_post where p.id = ${id}`
-    );
+  getViews: id=>{
+    return db.load(`select * from post where id = ${id} `);
   }
 };
