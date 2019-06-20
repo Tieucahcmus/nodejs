@@ -6,6 +6,8 @@ var router = express.Router();
 
 // categories cho navbar
 
+/* #region  tempt */
+
 router.get("/categories", (req, res) => {
   res.render("view_posts/categories-post", {
     // post_subcategories: res.locals.post_categories
@@ -54,9 +56,10 @@ router.get("/category/:id", (req, res, next) => {
     }
   });
 });
+/* #endregion */
 
 //chỗ này sẽ hiển thị chi tiết 1 bài báo
-//slug_title: tên không dấu
+//slug: tên không dấu
 router.get("/single/:slug_title", (req, res, next) => {
   console.log("posts/single/slug_title");
   var slug_title = req.params.slug_title;
@@ -95,7 +98,7 @@ router.get("/single/:slug_title", (req, res, next) => {
 });
 
 //chỗ này sẽ hiển thị các bài báo sau khi nhấn vào category
-//slug-title: tên không dấu
+//slug: tên không dấu
 router.get("/menu/:slug_title", (req, res, next) => {
   console.log("posts/meunu/slug-title");
   var slug_title = req.params.slug_title;
@@ -142,7 +145,7 @@ router.get("/menu/:slug_title", (req, res, next) => {
 });
 
 //chỗ này sẽ hiển thị các bài báo sau khi nhấn vào category/subcategory
-//slug-title: tên không dấu
+//slug: tên không dấu
 router.get("/menu/:slug_cat/:slug_sub", (req, res, next) => {
   console.log("posts/meunu/slug-cat/slug-sub");
   var slug_cat = req.params.slug_cat;
@@ -183,7 +186,7 @@ router.get("/menu/:slug_cat/:slug_sub", (req, res, next) => {
             error: false,
             is_have_subcategory: true,
             post_publish: rows,
-            post_tags: post_tags,
+            post_tags: post_tags
           });
         })
         .catch(next);
@@ -199,10 +202,11 @@ router.get("/menu/:slug_cat/:slug_sub", (req, res, next) => {
   //res.render("home");
 });
 
-
 //chỗ này sẽ hiển thị các bài báo sau khi nhấn vào category hoặc subcategory
 //tagname: tên tên tag
 router.get("/tag/:tagname", (req, res, next) => {
+  
+  
   res.render("home");
 });
 
