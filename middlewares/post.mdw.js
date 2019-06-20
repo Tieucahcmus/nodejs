@@ -19,19 +19,13 @@ module.exports = (req, res, next) => {
     (segment[1] == "managers" && segment[2] == "subcategory1")
   ) {
     //thì load categories lên res.locals
-    categoryModel
-      .all()
-      .then(categories => {
-        categoryModel
-          .allSubCategory1()
-          .then(subcategories => {
-            res.locals.post_categories_mdw = categories;
-            res.locals.post_subcategories_mdw = subcategories;
-            // console.log(categories);
-            // console.log(subcategories);
-            next();
-          })
-          .catch(next);
+    Promise.all([categoryModel.all(), categoryModel.allSubCategory1()])
+      .then(([categories, subcategories]) => {
+        res.locals.post_categories_mdw = categories;
+        res.locals.post_subcategories_mdw = subcategories;
+        // console.log(categories);
+        // console.log(subcategories);
+        next();
       })
       .catch(next);
   } else {

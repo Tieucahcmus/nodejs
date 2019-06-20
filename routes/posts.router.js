@@ -9,23 +9,23 @@ var config = require("../config/default.json");
 
 /* #region  tempt */
 
-router.get("/categories", (req, res) => {
-  res.render("view_posts/categories-post", {
-    // post_subcategories: res.locals.post_categories
-  });
-});
+// router.get("/categories", (req, res) => {
+//   res.render("view_posts/categories-post", {
+//     // post_subcategories: res.locals.post_categories
+//   });
+// });
 
-router.get("/category/single", (req, res) => {
-  // res.render("view_posts/single-post");
-  // res.render("view_posts/single-post_test");
-  res.render("view_posts/single-post_publish");
-});
+// router.get("/category/single", (req, res) => {
+//   // res.render("view_posts/single-post");
+//   // res.render("view_posts/single-post_test");
+//   res.render("view_posts/single-post_publish");
+// });
 
-router.get("/category/singleArticles", (req, res) => {
-  // res.render("view_posts/single-post");
-  // res.render("view_posts/single-post_test");
-  res.render("view_posts/single-post");
-});
+// router.get("/category/singleArticles", (req, res) => {
+//   // res.render("view_posts/single-post");
+//   // res.render("view_posts/single-post_test");
+//   res.render("view_posts/single-post");
+// });
 
 //single post
 
@@ -417,13 +417,6 @@ router.get("/tag/:tagname", (req, res, next) => {
 
 //chỗ này sẽ hiển thị các bài báo sau khi search
 //keyword: từ khoá tìm kiếm
-// router.get("/search/", (req, res, next) => {
-//   var keyword = req.query.keyword
-//   console.log("keyword: " + req.query.keyword);
-//   res.end("search: " + keyword);
-//   //res.render("home");
-// });
-
 router.get("/search", (req, res, next) => {
   var keyword = req.query.keyword;
   console.log("keyword: " + keyword);
