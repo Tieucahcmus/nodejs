@@ -5,7 +5,7 @@ var router = express.Router();
 var moment = require("moment");
 var db = require("../utils/db");
 var multer = require("multer");
-var config = require('../config/default.json');
+var config = require("../config/default.json");
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -30,47 +30,69 @@ router.get("/", (req, res, next) => {
     var preButton = 1;
     var nextButton = 2;
     Promise.all([
-      postModel.pageById(req.user.id,start_offset),
-      postModel.singleBy('id_user',req.user.id),
-      postModel.countPostWithStt('status','2',req.user.id)
+      postModel.pageById(req.user.id, start_offset),
+      postModel.singleBy("id_user", req.user.id),
+      postModel.countPostWithStt("status", "2", req.user.id)
     ])
-      .then(([rows,nrows,countPosted]) => {
+      .then(([rows, nrows, countPosted]) => {
         var total = nrows.length;
         var nPages = Math.floor(total / limit);
-        if (total % limit > 0)
-          nPages++;
+        if (total % limit > 0) nPages++;
 
         var arr = new Array();
-        for(var i=1 ;i <=nPages;i++)
-        {
+        for (var i = 1; i <= nPages; i++) {
           arr.push({
             value: i,
             active: i === +page
           });
         }
 
-        if(page <= 1)
-          preButton = 0;
-        else
-          preButton = +page - 1;
+        if (page <= 1) preButton = 0;
+        else preButton = +page - 1;
 
-        if(page < nPages )
-          nextButton = +page + 1;
-        else
-          nextButton = 0;
+        if (page < nPages) nextButton = +page + 1;
+        else nextButton = 0;
 
         res.render("view_writers/index", {
           layout: "writer_layout",
           post: rows,
           count: total,
-          page_numbers:arr,
+          page_numbers: arr,
           preButton,
           nextButton,
-          postedCount: countPosted[0]['count(*)']
+          postedCount: countPosted[0]["count(*)"]
         });
       })
       .catch(next);
   } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+router.get("/published", (req, res, next) => {
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
+    var id_user = res.locals.writer_mdw[0]["id_user"];
+    //console.log(id_user);
+    // res.end("managers/categories");
+    Promise.all([
+      db.load(`
+        select * 
+        from post 
+        where post.status = 2 and post.id_user = '${id_user}' and
+        post.is_delete = 0
+      `)
+    ])
+      .then(([categories]) => {
+        res.render("view_writers/published", {
+          layout: "writer_layout",
+          categories
+        });
+      })
+      .catch(next);
+  } //
+  else {
     res.render("404", {
       layout: false
     });
@@ -110,7 +132,7 @@ router.get("/edit/:id", (req, res, next) => {
   }
 });
 
-//route này có thể đổi thành quyền admin or 
+//route này có thể đổi thành quyền admin or
 router.get("/backup/:id", (req, res, next) => {
   var retUrl = req.query.retUrl || "/writers";
   if (res.locals.isAuthenticated && res.locals.is_writer) {
@@ -174,10 +196,7 @@ router.get("/writing/subcat-is-available", (req, res, next) => {
 
 router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-
     var TagArr = [];
-    
-
 
     var entity = {
       title: req.body.title,
@@ -200,22 +219,19 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
       .isSubcategoryDependentCategory(entity.id_subcategory, entity.id_category)
       .then(rows => {
         if (rows.length >= 0) {
-           //kiểm tra slug_title để ko thêm trùng (bước kiểm tra cuối cùng)
-           //tránh tình trạng vì 1 lý do nào đó ấn post nhiều lần
+          //kiểm tra slug_title để ko thêm trùng (bước kiểm tra cuối cùng)
+          //tránh tình trạng vì 1 lý do nào đó ấn post nhiều lần
           //add post
-          Promise.all([
-            postModel.addPost(entity),
-            db.loadAllExist("tag", 0)
-          ])
-            .then(([rows,tags]) => {
-               res.render("view_writers/writing", {
-                    layout: "writer_layout",
-                    categories: res.locals.post_categories_mdw,
-                    subcategories: res.locals.post_subcategories_mdw,
-                    tags: tags
-                  });
-                })
-                .catch(next);
+          Promise.all([postModel.addPost(entity), db.loadAllExist("tag", 0)])
+            .then(([rows, tags]) => {
+              res.render("view_writers/writing", {
+                layout: "writer_layout",
+                categories: res.locals.post_categories_mdw,
+                subcategories: res.locals.post_subcategories_mdw,
+                tags: tags
+              });
+            })
+            .catch(next);
         } //
         else {
           db.loadAllExist("tag", 0)

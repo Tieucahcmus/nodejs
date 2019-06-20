@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   if (req.user) {
     res.locals.isAuthenticated = true;
     res.locals.authUser = req.user;
-    // console.log(res.locals.authUser);
+     //console.log(res.locals.authUser);
     if (+res.locals.authUser.id_permission === 1) {
       res.locals.is_admin = true;
       next();
