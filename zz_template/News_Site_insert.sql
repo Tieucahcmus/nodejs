@@ -385,4 +385,34 @@ INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('VCS',0);
 INSERT INTO `news_site`.`tag` (`name`,`is_delete`) VALUES ('LCS',0);
 
 -- post_tag
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+INSERT INTO `news_site`.`post_tag` (`id_post`,`id_tag`) VALUES (1,1);
+
 
