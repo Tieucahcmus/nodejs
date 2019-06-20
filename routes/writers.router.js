@@ -43,7 +43,10 @@ router.get("/", (req, res, next) => {
         var arr = new Array();
         for(var i=1 ;i <=nPages;i++)
         {
-          arr.push({value: i});
+          arr.push({
+            value: i,
+            active: i === +page
+          });
         }
 
         if(page <= 1)
