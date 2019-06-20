@@ -156,35 +156,73 @@ router.get("/menu/:slug_title", (req, res, next) => {
     return;
   }
 
-  db.load(
-    `select post.* ,
-            category.name as 'catname', category.slug_name as 'cat_slugname'
+  //dành cho phân trang
+  //var limit = config.paginate.default;
+  var limit = 5;
+  var page = req.query.page || 1;
+  if (page < 1) {
+    page = 1;
+  }
+  var start_offset = (page - 1) * limit;
+
+  console.log(start_offset);
+
+  Promise.all([
+    //chỉ để đếm total
+    db.load(
+      `select count(*) as totalPages
       from post join category on post.id_category = category.id
       where category.slug_name = '${slug_title}' and category.is_delete = 0 and post.is_delete = 0`
-  ).then(rows => {
-    if (rows.length > 0) {
-      console.log(rows.length);
-      db.load(
-        `select post_tag.*, tag.name as 'tagname'
-          from post_tag join tag on post_tag.id_tag = tag.id`
-      )
-        .then(post_tags => {
-          console.log(post_tags.length);
-          res.render("view_posts/group-post", {
-            error: false,
-            post_publish: rows,
-            post_tags: post_tags
+    ),
+    //phân trang
+    db.load(
+      `select post.* ,
+            category.name as 'catname', category.slug_name as 'cat_slugname'
+      from post join category on post.id_category = category.id
+      where category.slug_name = '${slug_title}' and category.is_delete = 0 and post.is_delete = 0
+      limit ${limit} offset ${start_offset}`
+    ),
+    //tags
+    db.load(
+      `select post_tag.*, tag.name as 'tagname'
+        from post_tag join tag on post_tag.id_tag = tag.id`
+    )
+  ])
+    .then(([postsTotal, posts, post_tags]) => {
+      if (posts.length > 0) {
+        console.log(postsTotal[0].totalPages);
+        console.log(post_tags.length);
+        console.log(posts.length);
+
+        var total = postsTotal[0].totalPages;
+        var nPages = Math.floor(total / limit);
+        if (total % limit > 0) {
+          nPages++;
+        }
+
+        var page_numbers = [];
+        for (i = 1; i <= nPages; i++) {
+          page_numbers.push({
+            value: i,
+            active: i === +page
           });
-        })
-        .catch(next);
-    } //
-    else {
-      res.render("404", {
-        // error: true
-        layout: false
-      });
-    }
-  });
+        }
+
+        res.render("view_posts/group-post", {
+          error: false,
+          post_publish: posts,
+          post_tags: post_tags,
+          page_numbers
+        });
+      } //
+      else {
+        res.render("404", {
+          // error: true
+          layout: false
+        });
+      }
+    })
+    .catch(next);
 
   //res.render("home");
 });
