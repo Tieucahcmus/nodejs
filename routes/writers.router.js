@@ -198,6 +198,8 @@ router.get("/writing/subcat-is-available", (req, res, next) => {
 router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     var TagArr = [];
+    var checkedtags = req.body.tags;
+    console.log(checkedtags);
 
     var entity = {
       title: req.body.title,
@@ -224,7 +226,21 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
           //tránh tình trạng vì 1 lý do nào đó ấn post nhiều lần
           //add post
           Promise.all([postModel.addPost(entity), db.loadAllExist("tag", 0)])
-            .then(([rows, tags]) => {
+            .then(([insertID, tags]) => {
+              // console.log("idxxx: " + insertID);
+              //add vô post_tag
+              for (i = 0; i < checkedtags.length; i++) {
+                var en = {
+                  id_post: insertID,
+                  id_tag: +checkedtags[i]
+                };
+                // console.log(i + "- " );
+                // console.log(en);
+                db.add("post_tag", en)
+                  .then()
+                  .catch(next);
+              }
+
               res.render("view_writers/writing", {
                 layout: "writer_layout",
                 categories: res.locals.post_categories_mdw,
