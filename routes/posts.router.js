@@ -417,8 +417,96 @@ router.get("/tag/:tagname", (req, res, next) => {
 
 //chỗ này sẽ hiển thị các bài báo sau khi search
 //keyword: từ khoá tìm kiếm
-router.get("/search/:keyword", (req, res, next) => {
-  res.render("home");
+// router.get("/search/", (req, res, next) => {
+//   var keyword = req.query.keyword
+//   console.log("keyword: " + req.query.keyword);
+//   res.end("search: " + keyword);
+//   //res.render("home");
+// });
+
+router.get("/search", (req, res, next) => {
+  var keyword = req.query.keyword;
+  console.log("keyword: " + keyword);
+
+  if (!keyword || keyword.length === 0) {
+    res.redirect("/");
+  }
+  //dành cho phân trang
+  var limit = config.paginate.default;
+  //var limit = 5;
+  var page = req.query.page || 1;
+  if (page < 1) {
+    page = 1;
+  }
+  var start_offset = (page - 1) * limit;
+  console.log(page);
+  Promise.all([
+    //chỉ để đếm total
+    db.load(`
+    select count(*) as totalPages
+    from post join  category on post.id_category = category.id 
+              join subcategory on  post.id_subcategory = subcategory.id  
+    where 
+    (
+       MATCH (post.title, post.summary, post.content, post.slug_title) AGAINST ('${keyword}')
+    OR MATCH (category.name, category.slug_name) AGAINST ('${keyword}')
+    OR MATCH (subcategory.name, subcategory.slug_name) AGAINST ('${keyword}')
+    )  
+    and post.status = 2 and post.is_delete = 0 `),
+    //phân trang
+    db.load(`
+    select post.*, 
+		        category.name as 'catname', category.slug_name as 'cat_slugname',
+	          subcategory.name as 'subname', subcategory.slug_name as 'sub_slugname' 
+    from post join  category on post.id_category = category.id 
+              join subcategory on  post.id_subcategory = subcategory.id  
+    where 
+    (
+       MATCH (post.title, post.summary, post.content, post.slug_title) AGAINST ('${keyword}')
+    OR MATCH (category.name, category.slug_name) AGAINST ('${keyword}')
+    OR MATCH (subcategory.name, subcategory.slug_name) AGAINST ('${keyword}')
+    )  
+    and post.status = 2 and post.is_delete = 0
+    limit ${limit} offset ${start_offset}`),  
+
+    //tags
+    db.load(
+      `select post_tag.*, tag.name as 'tagname'
+        from post_tag join tag on post_tag.id_tag = tag.id`
+    )
+  ])
+    .then(([postsTotal, posts, post_tags]) => {
+      console.log(postsTotal[0].totalPages);
+      console.log(post_tags.length);
+      console.log(posts.length);
+
+      var total = postsTotal[0].totalPages;
+      var nPages = Math.floor(total / limit);
+      if (total % limit > 0) {
+        nPages++;
+      }
+
+      var page_numbers = [];
+      for (i = 1; i <= nPages; i++) {
+        page_numbers.push({
+          value: i,
+          active: i === +page,
+          keyword
+        });
+      }
+
+      res.render("view_posts/search-post", {
+        error: false,
+        post_publish: posts,
+        post_tags: post_tags,
+        page_numbers
+      });
+    })
+    .catch(next);
+
+  //res.end("search:" + keyword);
+
+  //res.render("home");
 });
 
 module.exports = router;
