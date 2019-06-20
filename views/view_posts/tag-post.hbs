@@ -10,12 +10,8 @@
                     {{#each post_publish}}
                     <div class="single-blog-post featured-post mb-30">
                         <div class="post-data">
-                            <a href="/posts/menu/{{cat_slugname}}" class="post-catagory">#{{catname}} </h1></a>
-                            {{#if ../is_have_subcategory}}
-                            <a href="/posts/menu/{{cat_slugname}}/{{sub_slugname}}" class="post-catagory">#{{subname}}
-                                </h1></a>
-                            {{/if}}
-
+                            <a href="/posts/menu/{{cat_slugname}}" class="post-catagory">#{{tagname}} </h1></a>
+  
                             <a href="/posts/single/{{slug_title}}" class="post-title">
                                 <h6>{{title}}</h6>
                             </a>

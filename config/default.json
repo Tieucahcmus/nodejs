@@ -7,6 +7,6 @@
       "database": "news_site"
     },
     "paginate": {
-      "default": 3
+      "default": 5
     }
   }

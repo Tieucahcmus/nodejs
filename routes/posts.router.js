@@ -4,7 +4,7 @@ var categoryModel = require("../models/categories.model");
 var db = require("../utils/db");
 var router = express.Router();
 var moment = require("moment");
-
+var config = require("../config/default.json");
 // categories cho navbar
 
 /* #region  tempt */
@@ -157,29 +157,31 @@ router.get("/menu/:slug_title", (req, res, next) => {
   }
 
   //dành cho phân trang
-  //var limit = config.paginate.default;
-  var limit = 5;
+  var limit = config.paginate.default;
+  //var limit = 5;
   var page = req.query.page || 1;
   if (page < 1) {
     page = 1;
   }
   var start_offset = (page - 1) * limit;
 
-  console.log(start_offset);
+  //console.log(start_offset);
 
   Promise.all([
     //chỉ để đếm total
     db.load(
       `select count(*) as totalPages
       from post join category on post.id_category = category.id
-      where category.slug_name = '${slug_title}' and category.is_delete = 0 and post.is_delete = 0`
+      where post.status = 2 and
+      category.slug_name = '${slug_title}' and category.is_delete = 0 and post.is_delete = 0`
     ),
     //phân trang
     db.load(
       `select post.* ,
             category.name as 'catname', category.slug_name as 'cat_slugname'
       from post join category on post.id_category = category.id
-      where category.slug_name = '${slug_title}' and category.is_delete = 0 and post.is_delete = 0
+      where post.status = 2 and
+      category.slug_name = '${slug_title}' and category.is_delete = 0 and post.is_delete = 0
       limit ${limit} offset ${start_offset}`
     ),
     //tags
@@ -248,39 +250,81 @@ router.get("/menu/:slug_cat/:slug_sub", (req, res, next) => {
     return;
   }
 
-  db.load(
-    `select post.*,  
+  //dành cho phân trang
+  var limit = config.paginate.default;
+  //var limit = 5;
+  var page = req.query.page || 1;
+  if (page < 1) {
+    page = 1;
+  }
+  var start_offset = (page - 1) * limit;
+
+  //console.log(start_offset);
+  Promise.all([
+    //chỉ để đếm total
+    db.load(
+      `select count(*) as totalPages
+      from post join category on post.id_category = category.id
+      join subcategory on  post.id_subcategory = subcategory.id  
+      where category.slug_name = '${slug_cat}' and subcategory.slug_name = '${slug_sub}'
+      and post.status = 2 and
+      category.is_delete = 0 and post.is_delete = 0 and subcategory.is_delete = 0`
+    ),
+
+    //phân trang
+    db.load(
+      `select post.*,  
 		        category.name as 'catname', category.slug_name as 'cat_slugname',
             subcategory.name as 'subname', subcategory.slug_name as 'sub_slugname' 
       from post join category on post.id_category = category.id
       join subcategory on  post.id_subcategory = subcategory.id  
       where category.slug_name = '${slug_cat}' and subcategory.slug_name = '${slug_sub}'
-      and category.is_delete = 0 and post.is_delete = 0 and subcategory.is_delete = 0`
-  ).then(rows => {
-    if (rows.length > 0) {
-      console.log(rows.length);
-      db.load(
-        `select post_tag.*, tag.name as 'tagname'
-          from post_tag join tag on post_tag.id_tag = tag.id`
-      )
-        .then(post_tags => {
-          console.log(post_tags.length);
-          res.render("view_posts/group-post", {
-            error: false,
-            is_have_subcategory: true,
-            post_publish: rows,
-            post_tags: post_tags
+      and post.status = 2 and
+      category.is_delete = 0 and post.is_delete = 0 and subcategory.is_delete = 0
+      limit ${limit} offset ${start_offset}`
+    ),
+    //tags
+    db.load(
+      `select post_tag.*, tag.name as 'tagname'
+        from post_tag join tag on post_tag.id_tag = tag.id`
+    )
+  ])
+    .then(([postsTotal, posts, post_tags]) => {
+      if (posts.length > 0) {
+        console.log(postsTotal[0].totalPages);
+        console.log(post_tags.length);
+        console.log(posts.length);
+
+        var total = postsTotal[0].totalPages;
+        var nPages = Math.floor(total / limit);
+        if (total % limit > 0) {
+          nPages++;
+        }
+
+        var page_numbers = [];
+        for (i = 1; i <= nPages; i++) {
+          page_numbers.push({
+            value: i,
+            active: i === +page
           });
-        })
-        .catch(next);
-    } //
-    else {
-      res.render("404", {
-        // error: true
-        layout: false
-      });
-    }
-  });
+        }
+
+        res.render("view_posts/group-post", {
+          error: false,
+          is_have_subcategory: true,
+          post_publish: posts,
+          post_tags: post_tags,
+          page_numbers
+        });
+      } //
+      else {
+        res.render("404", {
+          // error: true
+          layout: false
+        });
+      }
+    })
+    .catch(next);
 
   //res.render("home");
 });
@@ -288,7 +332,87 @@ router.get("/menu/:slug_cat/:slug_sub", (req, res, next) => {
 //chỗ này sẽ hiển thị các bài báo sau khi nhấn vào category hoặc subcategory
 //tagname: tên tên tag
 router.get("/tag/:tagname", (req, res, next) => {
-  res.render("home");
+  console.log("posts/tag/tagname");
+  var tagname = req.params.tagname;
+  console.log(tagname);
+
+  if (!tagname || tagname.length === 0) {
+    res.render("404", {
+      layout: false
+    });
+    return;
+  }
+
+  //dành cho phân trang
+  var limit = config.paginate.default;
+  //var limit = 5;
+  var page = req.query.page || 1;
+  if (page < 1) {
+    page = 1;
+  }
+  var start_offset = (page - 1) * limit;
+
+  Promise.all([
+    //chỉ để đếm total
+    db.load(
+      `select count(*) as totalPages
+      from post join post_tag on post.id = post_tag.id_post
+          join tag on tag.id = post_tag.id_tag
+      where tag.name = '${tagname}' and
+      post.status = 2 and post.is_delete = 0 and tag.is_delete = 0`
+    ),
+    //phân trang
+    db.load(
+      `select post.*, tag.name as 'tagname', tag.id as 'tagid'
+      from post join post_tag on post.id = post_tag.id_post
+          join tag on tag.id = post_tag.id_tag
+      where  tag.name = '${tagname}' and
+      post.status = 2 and post.is_delete = 0 and tag.is_delete = 0
+      limit ${limit} offset ${start_offset}`
+    ),
+    //tags
+    db.load(
+      `select post_tag.*, tag.name as 'tagname'
+        from post_tag join tag on post_tag.id_tag = tag.id`
+    )
+  ])
+    .then(([postsTotal, posts, post_tags]) => {
+      if (posts.length > 0) {
+        console.log(postsTotal[0].totalPages);
+        console.log(post_tags.length);
+        console.log(posts.length);
+
+        var total = postsTotal[0].totalPages;
+        var nPages = Math.floor(total / limit);
+        if (total % limit > 0) {
+          nPages++;
+        }
+
+        var page_numbers = [];
+        for (i = 1; i <= nPages; i++) {
+          page_numbers.push({
+            value: i,
+            active: i === +page
+          });
+        }
+
+        res.render("view_posts/tag-post", {
+          error: false,
+          post_publish: posts,
+          post_tags: post_tags,
+          page_numbers
+        });
+      } //
+      else {
+        res.render("404", {
+          // error: true
+          layout: false
+        });
+      }
+    })
+    .catch(next);
+
+  //res.render("home");
 });
 
 //chỗ này sẽ hiển thị các bài báo sau khi search
