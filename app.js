@@ -92,6 +92,8 @@ app.use("/writers", require("./routes/writers.router"));
 
 app.use("/posts", require("./routes/posts.router"));
 
+app.use("/editors", require("./routes/editors.router"));
+
 app.get("/contact", (req, res, next) => {
   res.render("view_posts/contact");
 });
