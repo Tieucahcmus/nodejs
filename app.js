@@ -59,7 +59,7 @@ require("./middlewares/upload")(app);
 // require("./middlewares/upload")(app);
 app.use(require("./middlewares/post.mdw"));
 app.use(require("./middlewares/auth.mdw"));
-
+app.use(require("./middlewares/writer.mdw"));
 // ==================== ROUTES ====================
 
 app.use("/", require("./routes/homepage.router"));

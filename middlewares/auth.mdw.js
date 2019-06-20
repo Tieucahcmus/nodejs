@@ -1,6 +1,7 @@
 var postModel = require("../models/post.model");
 var categoryModel = require("../models/categories.model");
 module.exports = (req, res, next) => {
+  console.log("req.auth.mdw");
   if (req.user) {
     res.locals.isAuthenticated = true;
     res.locals.authUser = req.user;
