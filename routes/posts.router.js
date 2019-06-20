@@ -29,34 +29,34 @@ router.get("/category/singleArticles", (req, res) => {
 
 //single post
 
-router.get("/category/:id", (req, res, next) => {
-  var id = req.params.id;
-  if (isNaN(id)) {
-    res.render("error", {
-      layout: false
-    });
-    return;
-  }
-  postModel.single(id).then(rows => {
-    if (rows.length > 0) {
-      // console.log("post.router rows");
-      // console.log(rows);
-      // console.log("post.router rows[0]");
-      // console.log(rows[0]);
-      // console.log(rows[0].content);
+// router.get("/category/:id", (req, res, next) => {
+//   var id = req.params.id;
+//   if (isNaN(id)) {
+//     res.render("error", {
+//       layout: false
+//     });
+//     return;
+//   }
+//   postModel.single(id).then(rows => {
+//     if (rows.length > 0) {
+//       // console.log("post.router rows");
+//       // console.log(rows);
+//       // console.log("post.router rows[0]");
+//       // console.log(rows[0]);
+//       // console.log(rows[0].content);
 
-      res.render("view_posts/single-post_publish", {
-        error: false,
-        post_publish: rows[0]
-        // post_categories: res.locals.post_categories
-      });
-    } else {
-      res.render("error", {
-        error: true
-      });
-    }
-  });
-});
+//       res.render("view_posts/single-post_publish", {
+//         error: false,
+//         post_publish: rows[0]
+//         // post_categories: res.locals.post_categories
+//       });
+//     } else {
+//       res.render("error", {
+//         error: true
+//       });
+//     }
+//   });
+// });
 /* #endregion */
 
 //chỗ này sẽ hiển thị chi tiết 1 bài báo

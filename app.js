@@ -13,6 +13,9 @@ var url = require("url");
 var categoryModel = require("./models/categories.model");
 var utils = require("./utils/utils");
 var postModel = require("./models/post.model");
+
+var db = require("./utils/db");
+
 var app = express();
 
 // ==================== USE ====================
@@ -51,25 +54,15 @@ app.use(express.static("public"));
 // ==================== MIDDLEWARES ====================
 require("./middlewares/session.mdw")(app);
 require("./middlewares/passport.mdw")(app);
-require('./middlewares/upload')(app);
-
+require("./middlewares/upload")(app);
 
 // require("./middlewares/upload")(app);
 app.use(require("./middlewares/post.mdw"));
 app.use(require("./middlewares/auth.mdw"));
 
 // ==================== ROUTES ====================
-app.get("/", (req, res, next) => {
 
-  postModel
-      .postLimit(4)
-      .then(rows => {
-        res.render("view_posts/home", {
-          post: rows
-        });
-      })
-      .catch(next);
-});
+app.use("/", require("./routes/homepage.router"));
 
 // app.get("/read/:tag/:id/:slug_title", (req, res, next) => {
 //     postModel
@@ -82,7 +75,6 @@ app.get("/", (req, res, next) => {
 //     });
 //   });
 // });
-
 
 app.use("/managers", require("./routes/managers.router"));
 
@@ -152,4 +144,3 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
-
