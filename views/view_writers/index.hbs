@@ -181,11 +181,19 @@
               </table>
               <nav>
                 <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                  {{#compare this.preButton "===" 0}}
+                      <li class="page-item"><a class="page-link" href="">Previous</a></li>
+                      {{else}}
+                      <li class="page-item"><a class="page-link" href="?page={{this.preButton}}">Previous</a></li>
+                  {{/compare}}
                   {{#each this.page_numbers}}
-                  <li class="page-item"><a class="page-link" href="#">{{value}}</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{value}}">{{value}}</a></li>
                   {{/each}}
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                   {{#compare this.nextButton "===" 0}}
+                      <li class="page-item"><a class="page-link" href="">Next</a></li>
+                      {{else}}
+                      <li class="page-item"><a class="page-link" href="?page={{this.nextButton}}">Next</a></li>
+                  {{/compare}}
                 </ul>
             </nav>
             </div>

@@ -5,6 +5,7 @@ var router = express.Router();
 var moment = require("moment");
 var db = require("../utils/db");
 var multer = require("multer");
+var config = require('../config/default.json');
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -22,13 +23,48 @@ var upload = multer({
 
 router.get("/", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-    postModel
-      .AllPostbyId(req.user.id)
-      .then(rows => {
+    var limit = config.paginate.default;
+    var page = req.query.page || 1;
+    if (page < 1) page = 1;
+    var start_offset = (page - 1) * limit;
+
+    var preButton = 1;
+    var nextButton = 2;
+  
+    Promise.all([
+      postModel
+      .pageById(req.user.id,start_offset),
+      db.loadAll('post')
+    ])
+      .then(([rows,nrows]) => {
+        var total = nrows.length;
+        var nPages = Math.floor(total / limit);
+        if (total % limit > 0)
+          nPages++;
+    
+        var arr = new Array();
+        for(var i=1 ;i <=nPages;i++)
+        {
+          arr.push({value: i});
+        }
+
+        if(page <= 1)
+          preButton = 0;
+        else
+          preButton = +page - 1;
+
+        if(page < nPages )
+          nextButton = +page + 1;
+        else
+          nextButton = 0;
+
         res.render("view_writers/index", {
           layout: "writer_layout",
           post: rows,
-          count: rows.length
+          count: total,
+          page_numbers:arr,
+          preButton,
+          nextButton
         });
       })
       .catch(next);

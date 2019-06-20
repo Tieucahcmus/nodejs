@@ -1,5 +1,5 @@
 var db = require("../utils/db");
-
+var config = require("../config/default.json");
 var __TB_Post__ = "post";
 var __IDField__ = "id";
 var __TB_Tag__ = "tag";
@@ -47,8 +47,13 @@ module.exports = {
     where u.id = ${id_user}`);
   },
 
-  AllPostbyId: id => {
-    return db.load(`select * from ${__TB_Post__} where id_user = ${id}`);
+  // AllPostbyId: id => {
+  //   return db.load(`select * from ${__TB_Post__} where id_user = ${id}`);
+  // },
+
+  pageById: (id, start_offset) => {
+    var lim = config.paginate.default;
+    return db.load(`select * from ${__TB_Post__} where id_user = ${id} limit ${lim} offset ${start_offset}`);
   },
   /**
    * @param {*} entity { CatName: ... }
