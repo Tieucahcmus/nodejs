@@ -107,7 +107,7 @@ router.get("/edit/:id", (req, res, next) => {
   }
 });
 
-//route này có thể đổi thành quyền admin or editor
+//route này có thể đổi thành quyền admin or 
 router.get("/backup/:id", (req, res, next) => {
   var retUrl = req.query.retUrl || "/writers";
   if (res.locals.isAuthenticated && res.locals.is_writer) {
