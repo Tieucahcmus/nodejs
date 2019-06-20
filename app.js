@@ -5,6 +5,7 @@ var morgan = require("morgan");
 var createError = require("http-errors");
 var numeral = require("numeral");
 var hbs_helpers = require("handlebars-helpers")();
+var bcrypt = require("bcrypt");
 
 var http = require("http");
 var url = require("url");
@@ -59,8 +60,9 @@ app.use(require("./middlewares/auth.mdw"));
 
 // ==================== ROUTES ====================
 app.get("/", (req, res, next) => {
+
   postModel
-      .postLimit(10)
+      .postLimit(4)
       .then(rows => {
         res.render("view_posts/home", {
           post: rows

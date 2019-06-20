@@ -27,21 +27,19 @@ router.get("/", (req, res, next) => {
     var page = req.query.page || 1;
     if (page < 1) page = 1;
     var start_offset = (page - 1) * limit;
-
     var preButton = 1;
     var nextButton = 2;
-  
     Promise.all([
-      postModel
-      .pageById(req.user.id,start_offset),
-      db.loadAll('post')
+      postModel.pageById(req.user.id,start_offset),
+      postModel.singleBy('id_user',req.user.id),
+      postModel.countPostWithStt('status','2',req.user.id)
     ])
-      .then(([rows,nrows]) => {
+      .then(([rows,nrows,countPosted]) => {
         var total = nrows.length;
         var nPages = Math.floor(total / limit);
         if (total % limit > 0)
           nPages++;
-    
+
         var arr = new Array();
         for(var i=1 ;i <=nPages;i++)
         {
@@ -64,7 +62,8 @@ router.get("/", (req, res, next) => {
           count: total,
           page_numbers:arr,
           preButton,
-          nextButton
+          nextButton,
+          postedCount: countPosted[0]['count(*)']
         });
       })
       .catch(next);
@@ -172,61 +171,11 @@ router.get("/writing/subcat-is-available", (req, res, next) => {
 
 router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
-    /* #region  old */
 
-    // var tag = new Array();
+    var TagArr = [];
+    
 
-    // if (req.body.tagKT == "on") {
-    //   tag.push("Kinh Tế");
-    // }
 
-    // if (req.body.tagCT == "on") {
-    //   tag.push("Chính Trị");
-    // }
-
-    // if (req.body.tagXH == "on") {
-    //   tag.push("Xã Hội");
-    // }
-
-    // if (req.body.tagTG == "on") {
-    //   tag.push("Thế Giới");
-    // }
-
-    // if (req.body.tagCN == "on") {
-    //   tag.push("Công Nghệ");
-    // }
-
-    // if (req.body.tagDA == "on") {
-    //   tag.push("Điện Ảnh");
-    // }
-
-    // if (req.body.tagPL == "on") {
-    //   tag.push("Pháp Luật");
-    // }
-
-    // if (req.body.tagGD == "on") {
-    //   tag.push("Giáo Dục");
-    // }
-
-    // var str_tag = "";
-    // if (tag.length > 0) {
-    //   for (var i = 0; i < tag.length; i++) {
-    //     str_tag += tag[i];
-    //     if (i != tag.length - 1) {
-    //       str_tag += "_";
-    //     }
-    //   }
-    // }
-
-    // if (str_tag == "") {
-    //   str_tag = "Tổng Hợp";
-    // }
-
-    /* #endregion */
-
-    // console.log(req.files);
-    // console.log(req.body);
-    //phải theo đúng thứ tự trong bảng
     var entity = {
       title: req.body.title,
       slug_title: req.body.slug,
@@ -248,20 +197,15 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
       .isSubcategoryDependentCategory(entity.id_subcategory, entity.id_category)
       .then(rows => {
         if (rows.length >= 0) {
-
            //kiểm tra slug_title để ko thêm trùng (bước kiểm tra cuối cùng)
            //tránh tình trạng vì 1 lý do nào đó ấn post nhiều lần
-            
           //add post
-          postModel
-            .addPost(entity)
-            .then(rows => {
-              //add post_tag
-
-              //render lại trang writing
-              db.loadAllExist("tag", 0)
-                .then(tags => {
-                  res.render("view_writers/writing", {
+          Promise.all([
+            postModel.addPost(entity),
+            db.loadAllExist("tag", 0)
+          ])
+            .then(([rows,tags]) => {
+               res.render("view_writers/writing", {
                     layout: "writer_layout",
                     categories: res.locals.post_categories_mdw,
                     subcategories: res.locals.post_subcategories_mdw,
@@ -269,8 +213,6 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
                   });
                 })
                 .catch(next);
-            })
-            .catch(next);
         } //
         else {
           db.loadAllExist("tag", 0)

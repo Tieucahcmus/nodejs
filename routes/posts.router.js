@@ -3,6 +3,7 @@ var postModel = require("../models/post.model");
 var categoryModel = require("../models/categories.model");
 var db = require("../utils/db");
 var router = express.Router();
+var moment = require("moment");
 
 // categories cho navbar
 
@@ -59,8 +60,8 @@ router.get("/category/:id", (req, res, next) => {
 /* #endregion */
 
 //chỗ này sẽ hiển thị chi tiết 1 bài báo
-//slug: tên không dấu
-router.get("/single/:slug_title", (req, res, next) => {
+//slug_title: tên không dấu
+router.get("/single/:id/:slug_title", (req, res, next) => {
   console.log("posts/single/slug_title");
   var slug_title = req.params.slug_title;
   console.log(slug_title);
@@ -71,7 +72,7 @@ router.get("/single/:slug_title", (req, res, next) => {
     });
     return;
   }
-
+Promise.all([
   db.load(
     `select post.*, 
     category.name as 'catname', category.slug_name as 'cat_slugname',
@@ -80,12 +81,16 @@ router.get("/single/:slug_title", (req, res, next) => {
       join subcategory on post.id_subcategory = subcategory.id
       where post.slug_title = '${slug_title}' 
       and post.is_delete = 0 and category.is_delete = 0 and subcategory.is_delete = 0`
-  ).then(rows => {
+  ),
+  postModel.getComment(req.params.id)
+]).then(([rows,comment]) => {
     console.log(rows.length);
     if (rows.length > 0) {
       res.render("view_posts/single-post_publish", {
         error: false,
-        post_publish: rows[0]
+        post_publish: rows[0],
+        comment,
+        count: comment.length
         // post_categories: res.locals.post_categories
       });
     } else {
@@ -96,6 +101,30 @@ router.get("/single/:slug_title", (req, res, next) => {
     }
   });
 });
+
+// comment single post
+
+router.post("/single/:id/:slug_title", (req, res, next) => {
+ 
+    var entity = {
+      displayname: req.body.displayname,
+      comment_content: req.body.content,
+      comment_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      id_post: req.params.id
+    };
+    
+    var retUrl =req.query.retUrl ||"/posts/single/"+req.params.id+"/"+req.params.slug_title;
+    postModel
+      .addComment(entity)
+      .then(id => {
+        res.redirect(retUrl);
+      })
+      .catch(next);
+  });
+
+
+
 
 //chỗ này sẽ hiển thị các bài báo sau khi nhấn vào category
 //slug: tên không dấu

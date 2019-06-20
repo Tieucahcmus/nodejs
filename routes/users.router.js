@@ -117,37 +117,107 @@ router.post("/logout", restricted, (req, res, next) => {
 });
 
 router.get("/profile", restricted, (req, res, next) => {
-  userModel
-    .single(req.user.id)
-    .then(rows => {
-      res.render("view_users/edit-profile", {
-        info: rows[0]
-        // ,pseudonym: res.locals.writer_mdw[0]["pseudonym"]
+  if (res.locals.isAuthenticated) {
+    var _pseudonym ='';
+    if(res.locals.is_writer)
+    {
+       _pseudonym = res.locals.writer_mdw[0]["pseudonym"];
+    }
+    userModel
+      .single(req.user.id)
+      .then(rows => {
+        res.render("view_users/edit-profile", {
+          info: rows[0],
+          pseudonym: _pseudonym
+        });
+      })
+      .catch(next);
+    }else
+    {
+      res.render("404", {
+        layout: false
       });
-    })
-    .catch(next);
+    }
 });
 
+router.post("/profile", restricted, (req, res, next) => {
+  if (res.locals.isAuthenticated) {
+    var entity ={
+      id: req.user.id,
+      username: req.body.username,
+      displayname:req.body.displayname,
+      email:req.body.email
+    };
+   
+    var retUrl = req.query.retUrl || "/";
+    userModel.update(entity)
+    .then(id=>{
+      res.redirect(retUrl);
+    })
+    .catch(next);
+  }else
+  {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
+
+router.post("/changes_password", restricted, (req, res, next) => {
+  if (res.locals.isAuthenticated) {
+    var saltRounds = 12;
+    var hash = bcrypt.hashSync(req.body.new_pass, saltRounds);
+    var entity = {
+      id: req.user.id,
+      password : hash
+    }
+    userModel.update(entity)
+    .then(id=>{
+        res.redirect("/");
+    })
+    .catch(next);
+  }else
+  {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
 //read single post
-router.get("/read/:tag/:id/:slug_title", (req, res, next) => {
-  postModel.getSiglePostAndComment(req.params.id).then(rows => {
+router.get("/read/:id/:slug_title", (req, res, next) => {
+  var id =req.params.id;
+  Promise.all([
+    postModel.getViews(id),
+    postModel.single(id),
+    postModel.getComment(id)
+  ])
+  .then(([temp,post,comment]) => {
+    var view = +temp[0]['views'];
+    var viewEntity ={
+      id : id,
+      views: view + 1
+    }
+    postModel.update(viewEntity)
+    .then(id=>{
     res.render(
       "view_posts/single-post",
       {
-        post: rows[0],
-        tag: req.params.tag,
+        post: post[0],
+        // tag: req.params.tag,
         info: req.user,
-        count: rows.length,
-        comment: rows
+        count: comment.length,
+        comment: comment
       },
-      console.log(rows[0])
-    );
+      console.log(viewEntity)
+     );
+    }).catch(next);
   });
 });
 
 //comment single post
 
-router.post("/read/:tag/:id/:slug_title", (req, res, next) => {
+router.post("/read/:id/:slug_title", (req, res, next) => {
   var entity = {
     displayname: req.body.displayname,
     comment_content: req.body.content,
@@ -155,15 +225,8 @@ router.post("/read/:tag/:id/:slug_title", (req, res, next) => {
     last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
     id_post: req.params.id
   };
-  console.log(entity);
-  var retUrl =
-    req.query.retUrl ||
-    "/users/read/" +
-      req.params.tag +
-      "/" +
-      req.params.id +
-      "/" +
-      req.params.slug_title;
+  
+  var retUrl =req.query.retUrl ||"/users/read/"+req.params.id +"/"+req.params.slug_title;
   postModel
     .addComment(entity)
     .then(id => {
