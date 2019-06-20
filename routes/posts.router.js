@@ -75,8 +75,8 @@ router.get("/single/:slug_title", (req, res, next) => {
   Promise.all([
     db.load(
       `select post.*, 
-    category.name as 'catname', category.slug_name as 'cat_slugname',
-    subcategory.name as 'subname', subcategory.slug_name as 'sub_slugname'
+              category.name as 'catname', category.slug_name as 'cat_slugname',
+              subcategory.name as 'subname', subcategory.slug_name as 'sub_slugname'
       from post join category on post.id_category = category.id 
       join subcategory on post.id_subcategory = subcategory.id
       where post.slug_title = '${slug_title}' 
@@ -88,15 +88,27 @@ router.get("/single/:slug_title", (req, res, next) => {
     select comment.*, post.id
           from comment join post on comment.id_post = post.id
           where post.slug_title = '${slug_title}' 
-          and post.is_delete = 0 and comment.is_delete = 0`)
-  ]).then(([rows, comments]) => {
+          and post.is_delete = 0 and comment.is_delete = 0`),
+
+    //5 bài viết cùng chuyên mục
+    db.load(`
+    select post.*, category.name as 'catname', category.slug_name as 'cat_slugname'
+    from post join category on post.id_category = category.id
+    where post.is_delete = 0 and
+    post.id_category = (select post.id_category 
+					          from post
+                    where post.slug_title = '${slug_title}')
+    limit 0, 5;
+    `)
+  ]).then(([rows, comments, sameCategories]) => {
     console.log(rows.length);
     if (rows.length > 0) {
       res.render("view_posts/single-post_publish", {
         error: false,
         post_publish: rows[0],
         comments,
-        count: comments.length
+        count: comments.length,
+        sameCategories
         // post_categories: res.locals.post_categories
       });
     } else {
