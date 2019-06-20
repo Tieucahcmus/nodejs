@@ -70,7 +70,7 @@
                         </div>
                     </div> --}}
 
-                    <div class="pager d-flex align-items-center justify-content-between">
+                    {{!-- <div class="pager d-flex align-items-center justify-content-between">
                         <div class="prev">
                             <a href="#" class="active"><i class="fa fa-angle-left"></i> previous</a>
                         </div>
@@ -127,7 +127,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                    </div> --}}
 
                     <!-- Comment Area Start -->
                     <div class="comment_area clearfix">
@@ -211,7 +212,10 @@
                                     <a href="/posts/single/{{slug_title}}" class="post-title">
                                         <h6>{{title}}</h6>
                                     </a>
-                                    <p class="post-date">{{post_date}}</p>
+
+                                    <p class="post-date">
+                                        By:<strong class="text-danger"> {{pseudonym}} </strong>
+                                        | {{post_date}}</p>
                                 </div>
                             </div>
                         </div>
