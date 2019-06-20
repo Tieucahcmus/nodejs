@@ -75,6 +75,7 @@ router.get("/published", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
     var id_user = res.locals.writer_mdw[0]["id_user"];
     //console.log(id_user);
+    // console.log(res.locals.countPublished_mdw[0][0]);
     // res.end("managers/categories");
     Promise.all([
       db.load(`
