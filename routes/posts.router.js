@@ -56,8 +56,8 @@ router.get("/category/:id", (req, res, next) => {
 });
 
 //chỗ này sẽ hiển thị chi tiết 1 bài báo
-//category tên không dấu
-router.get("/:slug_name", (req, res, next) => {
+//slug_name: tên không dấu
+router.get("/single/:slug_name", (req, res, next) => {
   console.log("posts/slug_name");
   var slug_name = req.params.slug_name;
   console.log(slug_name);
@@ -71,7 +71,6 @@ router.get("/:slug_name", (req, res, next) => {
 
   postModel.singleBy(id).then(rows => {
     if (rows.length > 0) {
-
       res.render("view_posts/single-post_publish", {
         error: false,
         post_publish: rows[0]
@@ -83,10 +82,27 @@ router.get("/:slug_name", (req, res, next) => {
       });
     }
   });
-
-  // res.render("view_posts/categories-post.hbs", {
-  //   slug_name: slug_name
-  // });
 });
+
+//chỗ này sẽ hiển thị các bài báo sau khi search
+//keyword: từ khoá tìm kiếm
+router.get("/search/:keyword", (req, res, next) => {
+  res.render("home");
+});
+
+//chỗ này sẽ hiển thị các bài báo sau khi nhấn vào category hoặc subcategory
+//slug-title: tên không dấu
+router.get("/menu/:slug-title", (req, res, next) => {
+  res.render("home");
+});
+
+//chỗ này sẽ hiển thị các bài báo sau khi nhấn vào category hoặc subcategory
+//tagname: tên tên tag
+router.get("/tag/:tagname", (req, res, next) => {
+  res.render("home");
+});
+
+
+
 
 module.exports = router;
