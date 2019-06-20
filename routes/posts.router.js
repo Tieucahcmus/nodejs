@@ -61,7 +61,7 @@ router.get("/category/:id", (req, res, next) => {
 
 //chỗ này sẽ hiển thị chi tiết 1 bài báo
 //slug_title: tên không dấu
-router.get("/single/:id/:slug_title", (req, res, next) => {
+router.get("/single/:slug_title", (req, res, next) => {
   console.log("posts/single/slug_title");
   var slug_title = req.params.slug_title;
   console.log(slug_title);
@@ -72,25 +72,31 @@ router.get("/single/:id/:slug_title", (req, res, next) => {
     });
     return;
   }
-Promise.all([
-  db.load(
-    `select post.*, 
+  Promise.all([
+    db.load(
+      `select post.*, 
     category.name as 'catname', category.slug_name as 'cat_slugname',
     subcategory.name as 'subname', subcategory.slug_name as 'sub_slugname'
       from post join category on post.id_category = category.id 
       join subcategory on post.id_subcategory = subcategory.id
       where post.slug_title = '${slug_title}' 
       and post.is_delete = 0 and category.is_delete = 0 and subcategory.is_delete = 0`
-  ),
-  postModel.getComment(req.params.id)
-]).then(([rows,comment]) => {
+    ),
+
+    // postModel.getComment(req.params.id)
+    db.load(`  
+    select comment.*, post.id
+          from comment join post on comment.id_post = post.id
+          where post.slug_title = '${slug_title}' 
+          and post.is_delete = 0 and comment.is_delete = 0`)
+  ]).then(([rows, comments]) => {
     console.log(rows.length);
     if (rows.length > 0) {
       res.render("view_posts/single-post_publish", {
         error: false,
         post_publish: rows[0],
-        comment,
-        count: comment.length
+        comments,
+        count: comments.length
         // post_categories: res.locals.post_categories
       });
     } else {
@@ -105,26 +111,24 @@ Promise.all([
 // comment single post
 
 router.post("/single/:id/:slug_title", (req, res, next) => {
- 
-    var entity = {
-      displayname: req.body.displayname,
-      comment_content: req.body.content,
-      comment_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-      last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-      id_post: req.params.id
-    };
-    
-    var retUrl =req.query.retUrl ||"/posts/single/"+req.params.id+"/"+req.params.slug_title;
-    postModel
-      .addComment(entity)
-      .then(id => {
-        res.redirect(retUrl);
-      })
-      .catch(next);
-  });
+  var entity = {
+    displayname: req.body.displayname,
+    comment_content: req.body.content,
+    comment_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+    last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+    id_post: req.params.id
+  };
 
-
-
+  var retUrl =
+    req.query.retUrl ||
+    "/posts/single/" + req.params.id + "/" + req.params.slug_title;
+  postModel
+    .addComment(entity)
+    .then(id => {
+      res.redirect(retUrl);
+    })
+    .catch(next);
+});
 
 //chỗ này sẽ hiển thị các bài báo sau khi nhấn vào category
 //slug: tên không dấu
@@ -234,8 +238,6 @@ router.get("/menu/:slug_cat/:slug_sub", (req, res, next) => {
 //chỗ này sẽ hiển thị các bài báo sau khi nhấn vào category hoặc subcategory
 //tagname: tên tên tag
 router.get("/tag/:tagname", (req, res, next) => {
-  
-  
   res.render("home");
 });
 
