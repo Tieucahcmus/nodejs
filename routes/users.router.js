@@ -5,7 +5,7 @@ var passport = require("passport");
 var userModel = require("../models/user.model");
 var postModel = require("../models/post.model");
 var restricted = require("../middlewares/restricted.mdw");
-
+var db=require("../utils/db");
 var router = express.Router();
 
 router.get("/register", (req, res, next) => {
@@ -98,7 +98,8 @@ router.post("/login", (req, res, next) => {
     if (!user) {
       return res.render("view_users/login", {
         layout: false,
-        err_message: info.message
+        err_message: "Invalid username or password"
+        // err_message: info.message
       });
     }
     var retUrl = req.query.retUrl || "/";
@@ -197,9 +198,17 @@ router.get("/read/:id/:slug_title", (req, res, next) => {
   Promise.all([
     postModel.getViews(id),
     postModel.single(id),
-    postModel.getComment(id)
+    postModel.getComment(id),
+    //5 bài viết cùng chuyên mục
+    db.load(`
+    select post.*, category.name as 'catname', category.slug_name as 'cat_slugname'
+    from post join category on post.id_category = category.id
+    where post.is_delete = 0 and
+    post.id_category = (select post.id_category 
+					          from post
+                    where post.id = '${req.params.id}') limit 0, 5 `)
   ])
-  .then(([temp,post,comment]) => {
+  .then(([temp,post,comment,sameCat]) => {
     var view = +temp[0]['views'];
     var viewEntity ={
       id : id,
@@ -209,12 +218,14 @@ router.get("/read/:id/:slug_title", (req, res, next) => {
     .then(id=>{
     res.render(
       "view_posts/single-post",
+      // "view_posts/single-post_publish",
       {
         post: post[0],
         // tag: req.params.tag,
         info: req.user,
         count: comment.length,
-        comment: comment
+        comment: comment,
+        sameCat:sameCat
       },
       console.log(viewEntity)
      );
