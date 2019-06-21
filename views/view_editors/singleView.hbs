@@ -62,7 +62,7 @@
                 <div class="card-body-icon">
                   <i class="fas fa-fw fa-life-ring"></i>
                 </div>
-                <div class="mr-5"><h3><strong> {{this.approCount}} Wait For Approval </strong></h3> </div>
+                <div class="mr-5"><h3><strong>{{this.approCount}} Wait For Approval </strong></h3></div>
               </div>
               <a class="card-footer text-white clearfix small z-1" href="/editors/status/4">
                 <span class="float-left">View Details</span>
@@ -184,10 +184,10 @@
                       <li class="page-item active"><a class="page-link" href="?page={{this.preButton}}">Previous</a></li>
                   {{/compare}}
                   {{#each this.page_numbers}}
-                    <li class="page-item {{#if active}}active{{/if}}"><a class="page-link" href="?page={{value}}">{{value}}</a></li>
+                    <li class="page-item {{#if active }} active {{/if}}"><a class="page-link" href="?page={{value}}">{{value}}</a></li>
                   {{/each}}
                    {{#compare this.nextButton "===" 0}}
-                      <li class="page-item "><a class="page-link" href="">Next</a></li>
+                      <li class="page-item"><a class="page-link" href="">Next</a></li>
                       {{else}}
                       <li class="page-item active"><a class="page-link" href="?page={{this.nextButton}}">Next</a></li>
                   {{/compare}}

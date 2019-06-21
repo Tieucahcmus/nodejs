@@ -11,5 +11,13 @@ module.exports = {
     delete entity.id;
     return db.update('post','id',entity,id);
   },
+  countPostWithStt: (status)=>{
+    return db.load(`select count(*) from post where status = ${status}`);
+
+  },
+  pageByStt : (start_offset,status)=>{
+    var lim = config.paginate.default;
+    return db.load(`select * from post where  status =${status} limit ${lim} offset ${start_offset}`);
+  }
 
 };

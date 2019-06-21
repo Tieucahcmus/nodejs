@@ -16,6 +16,7 @@ module.exports = (req, res, next) => {
     segment[1] == "single" ||
     segment[1] == "search" ||
     segment[1] == "menu" ||
+    segment[1] == "users" ||
     (segment[1] == "managers" && segment[2] == "subcategory1")
   ) {
     //thì load categories lên res.locals

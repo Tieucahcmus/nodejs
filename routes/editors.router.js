@@ -17,9 +17,12 @@ router.get("/", (req, res, next) => {
     var nextButton = 2;
       Promise.all([
         editorModel.AllPost(start_offset),
-        db.loadAll('post')
+        db.loadAll('post'),
+        editorModel.countPostWithStt("2"),
+        editorModel.countPostWithStt("3"),
+        editorModel.countPostWithStt("4")
       ])
-      .then(([rows,nrows]) => {
+      .then(([rows,nrows, countPosted,countCancel,countAppro]) => {
         var total = nrows.length;
         var nPages = Math.floor(total / limit);
         if (total % limit > 0)
@@ -50,7 +53,10 @@ router.get("/", (req, res, next) => {
           page_numbers:arr,
           preButton,
           nextButton,
-          currentPage: page
+          currentPage: page,
+          postedCount: countPosted[0]["count(*)"],
+          cancelCount:countCancel[0]["count(*)"],
+          approCount:countAppro[0]["count(*)"],
         });
       })
       .catch(next);
@@ -118,6 +124,59 @@ router.get("/cancel/:id", (req, res, next) => {
   }
 });
 
+router.get("/status/:status", (req, res, next) => {
+  if (res.locals.isAuthenticated && res.locals.is_editor) {
+    var limit = config.paginate.default;
+    var page = req.query.page || 1;
+    if (page < 1) page = 1;
+    var start_offset = (page - 1) * limit;
+    var preButton = 1;
+    var nextButton = 2;
+    Promise.all([
+      editorModel.pageByStt(start_offset,req.params.status),
+        db.loadAll('post'),
+        editorModel.countPostWithStt("2"),
+        editorModel.countPostWithStt("3"),
+        editorModel.countPostWithStt("4")
+    ])
+      .then(([rows, nrows, countPosted,countCancel,countAppro]) => {
+        var total = nrows.length;
+        var nPages = Math.floor(total / limit);
+        if (total % limit > 0) nPages++;
+
+        var arr = new Array();
+        for (var i = 1; i <= nPages; i++) {
+          arr.push({
+            value: i,
+            active: i === +page
+          });
+        }
+
+        if (page <= 1) preButton = 0;
+        else preButton = +page - 1;
+
+        if (page < nPages) nextButton = +page + 1;
+        else nextButton = 0;
+
+        res.render("view_editors/singleView", {
+          layout: "writer_layout",
+          post: rows,
+          count: total,
+          page_numbers: arr,
+          preButton,
+          nextButton,
+          postedCount: countPosted[0]["count(*)"],
+          cancelCount:countCancel[0]["count(*)"],
+          approCount:countAppro[0]["count(*)"],
+        });
+      })
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
 // router.get("/delete/:id", (req, res, next) => {
 //   var retUrl = req.query.retUrl || "/editors";
 //   if (res.locals.isAuthenticated && res.locals.is_editor) {

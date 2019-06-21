@@ -16,21 +16,19 @@
                                 </h1></a>
                             {{/if}}
 
-                            <a href="/posts/single/{{slug_title}}" class="post-title">
+                            <a href="/users/read/{{id}}/{{slug_title}}" class="post-title">
                                 <h6>{{title}}</h6>
                             </a>
                             <div class="post-thumb">
-                                <a href="/posts/single/{{slug_title}}"><img src="/img/bg-img/25.jpg" alt=""></a>
+                                <a href="/users/read/{{id}}/{{slug_title}}"><img src="/img/bg-img/25.jpg" alt=""></a>
                             </div>
                             <div class="post-meta">
                                 <p class="post-author">By: <a href="#">{{pseudonym}}</a> | {{post_date}}</p>
                                 <p class="post-excerp">{{summary}}</p>
                                 <div class="align-items-center">
-                                    <a href="#" class=""><img src="/img/core-img/chat.png" alt="">
-                                        <span>10</span></a>
                                     <!-- Views -->
                                     <a href="#">
-                                        <i class="fa fa-eye mx-4" aria-hidden="true"> <strong class="mx-1"> 1 </strong>
+                                        <i class="fa fa-eye mx-1" aria-hidden="true"> <strong class="mx-1"> {{views}} </strong>
                                         </i>
                                     </a>
 

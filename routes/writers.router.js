@@ -343,77 +343,33 @@ router.post("/writing", upload.array("fuMain", 2), (req, res, next) => {
 });
 
 router.post("/edit/:id", (req, res, next) => {
-  var tag = new Array();
-  if (req.body.tagKT == "on") {
-    tag.push("Kinh Tế");
-  }
-
-  if (req.body.tagCT == "on") {
-    tag.push("Chính Trị");
-  }
-
-  if (req.body.tagXH == "on") {
-    tag.push("Xã Hội");
-  }
-
-  if (req.body.tagTG == "on") {
-    tag.push("Thế Giới");
-  }
-
-  if (req.body.tagCN == "on") {
-    tag.push("Công Nghệ");
-  }
-
-  if (req.body.tagDA == "on") {
-    tag.push("Điện Ảnh");
-  }
-
-  if (req.body.tagPL == "on") {
-    tag.push("Pháp Luật");
-  }
-
-  if (req.body.tagGD == "on") {
-    tag.push("Giáo Dục");
-  }
-
-  var str_tag = "";
-  if (tag.length > 0) {
-    for (var i = 0; i < tag.length; i++) {
-      str_tag += tag[i];
-      if (i != tag.length - 1) {
-        str_tag += "_";
-      }
-    }
-  }
-  const entity = {
-    id: req.params.id,
-    title: req.body.title,
-    slug_title: req.body.slug,
-    summary: req.body.summary,
-    id_category: req.body.category,
-    content: req.body.content,
-    id_user: res.locals.writer_mdw[0]["id_user"],
-    pseudonym: res.locals.writer_mdw[0]["pseudonym"],
-    tag: str_tag,
-    last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
-  };
-  console.log(entity);
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
   if (req.body.category == 0) {
     res.redirect("/writers/edit/" + res.params.id);
-  } else {
-    if (res.locals.isAuthenticated && res.locals.is_writer) {
+  } else {      
+      const entity = {
+        id: req.params.id,
+        title: req.body.title,
+        slug_title: req.body.slug,
+        summary: req.body.summary,
+        id_category: req.body.category,
+        content: req.body.content,
+        id_user: res.locals.writer_mdw[0]["id_user"],
+        pseudonym: res.locals.writer_mdw[0]["pseudonym"],
+        last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
+      };
+
       postModel
         .update(entity)
         .then(id => {
           res.redirect("/writers");
         })
         .catch(next);
-    } else {
-      res.render("404", {
-        layout: false
-      });
     }
+  }else {
+    res.render("404", {
+      layout: false
+    });
   }
 });
-
 module.exports = router;
