@@ -59,6 +59,12 @@ module.exports = {
     var lim = config.paginate.default;
     return db.load(`select * from ${__TB_Post__} where id_user = ${id} limit ${lim} offset ${start_offset}`);
   },
+
+  //pageByIdAndStt
+  pageByIdAndStt: (id, start_offset,status) => {
+    var lim = config.paginate.default;
+    return db.load(`select * from ${__TB_Post__} where id_user = ${id} AND status =${status} limit ${lim} offset ${start_offset}`);
+  },
   /**
    * @param {*} entity { CatName: ... }
    */

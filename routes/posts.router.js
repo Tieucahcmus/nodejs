@@ -101,16 +101,18 @@ router.get("/single/:slug_title", (req, res, next) => {
     limit 0, 5;
     `)
   ]).then(([rows, comments, sameCategories]) => {
-    console.log(rows.length);
+    // console.log(rows.length);
     if (rows.length > 0) {
       res.render("view_posts/single-post_publish", {
         error: false,
         post_publish: rows[0],
         comments,
         count: comments.length,
-        sameCategories
+        sameCategories,
+        // post_tags: tags
         // post_categories: res.locals.post_categories
-      });
+      }
+      );
     } else {
       res.render("404", {
         // error: true
@@ -122,18 +124,19 @@ router.get("/single/:slug_title", (req, res, next) => {
 
 // comment single post
 
-router.post("/single/:id/:slug_title", (req, res, next) => {
+router.post("/single/:slug_title", (req, res, next) => {
+
   var entity = {
     displayname: req.body.displayname,
     comment_content: req.body.content,
     comment_date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
     last_update: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-    id_post: req.params.id
+    id_post: req.body.id_post
   };
 
   var retUrl =
     req.query.retUrl ||
-    "/posts/single/" + req.params.id + "/" + req.params.slug_title;
+    "/posts/single/" + req.params.slug_title;
   postModel
     .addComment(entity)
     .then(id => {

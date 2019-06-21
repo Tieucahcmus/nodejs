@@ -32,9 +32,11 @@ router.get("/", (req, res, next) => {
     Promise.all([
       postModel.pageById(req.user.id, start_offset),
       postModel.singleBy("id_user", req.user.id),
-      postModel.countPostWithStt("status", "2", req.user.id)
+      postModel.countPostWithStt("status", "2", req.user.id),
+      postModel.countPostWithStt("status", "3", req.user.id),
+      postModel.countPostWithStt("status", "4", req.user.id)
     ])
-      .then(([rows, nrows, countPosted]) => {
+      .then(([rows, nrows, countPosted,countCancel,countAppro]) => {
         var total = nrows.length;
         var nPages = Math.floor(total / limit);
         if (total % limit > 0) nPages++;
@@ -60,7 +62,9 @@ router.get("/", (req, res, next) => {
           page_numbers: arr,
           preButton,
           nextButton,
-          postedCount: countPosted[0]["count(*)"]
+          postedCount: countPosted[0]["count(*)"],
+          cancelCount:countCancel[0]["count(*)"],
+          approCount:countAppro[0]["count(*)"],
         });
       })
       .catch(next);
@@ -70,6 +74,61 @@ router.get("/", (req, res, next) => {
     });
   }
 });
+
+router.get("/status/:status", (req, res, next) => {
+  if (res.locals.isAuthenticated && res.locals.is_writer) {
+    var limit = config.paginate.default;
+    var page = req.query.page || 1;
+    if (page < 1) page = 1;
+    var start_offset = (page - 1) * limit;
+    var preButton = 1;
+    var nextButton = 2;
+    Promise.all([
+      postModel.pageByIdAndStt(req.user.id, start_offset,req.params.status),
+      postModel.singleBy("id_user", req.user.id),
+      postModel.countPostWithStt("status", "2", req.user.id),
+      postModel.countPostWithStt("status", "3", req.user.id),
+      postModel.countPostWithStt("status", "4", req.user.id)
+    ])
+      .then(([rows, nrows, countPosted,countCancel,countAppro]) => {
+        var total = nrows.length;
+        var nPages = Math.floor(total / limit);
+        if (total % limit > 0) nPages++;
+
+        var arr = new Array();
+        for (var i = 1; i <= nPages; i++) {
+          arr.push({
+            value: i,
+            active: i === +page
+          });
+        }
+
+        if (page <= 1) preButton = 0;
+        else preButton = +page - 1;
+
+        if (page < nPages) nextButton = +page + 1;
+        else nextButton = 0;
+
+        res.render("view_writers/singleView", {
+          layout: "writer_layout",
+          post: rows,
+          count: total,
+          page_numbers: arr,
+          preButton,
+          nextButton,
+          postedCount: countPosted[0]["count(*)"],
+          cancelCount:countCancel[0]["count(*)"],
+          approCount:countAppro[0]["count(*)"],
+        });
+      })
+      .catch(next);
+  } else {
+    res.render("404", {
+      layout: false
+    });
+  }
+});
+
 
 router.get("/published", (req, res, next) => {
   if (res.locals.isAuthenticated && res.locals.is_writer) {
